@@ -39,15 +39,14 @@ Extract text from an image.
 """
 from . import cli
 from . import core
-from audiobot.cli import cli as audiobot
-from voice.VoiceType import VoiceTypeEngine
+import audiobot
+from voice import voice_typing
 
 __version__ = "2.1.0"
 
 __all__ = [
-    "cli"
+    "cli",
     "core",
     "audiobot",
-    "OperationMapper",
-    "VoiceTypeEngine",
+    "voice_typing",
 ]

@@ -1,6 +1,7 @@
+assets
 audiobot
 build
+docs
 filemac
 fweb
-res
 voice

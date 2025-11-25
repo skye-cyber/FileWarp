@@ -43,7 +43,7 @@ Replace `[options]` with the appropriate command-line options based on the funct
 - `9`:  --convert_doc2image
 - `10`: --extract_audio
 - `11`: --AudioJoin (join audio files to one master file)
-- `12`: --resize_image
+- `12`: --assetsize_image
 - `13`: --doc_long_image      (convert pdf/doc/docx to long image)
 - `14`: --image2pdf (convert image(s) to pdf)
 - `15`: --image2word (convert image(s) to word document)
@@ -123,10 +123,10 @@ filemac --audio_effect 'demo.mp3' --effect high
 ```
 
 **Original**<br/>
-  [Listen to Original Audio](https://skye-cyber.github.io/FileMAC/res/demo.html)
+  [Listen to Original Audio](https://skye-cyber.github.io/FileMAC/assets/demo.html)
 
 **Result**<br/>
-  [Listen to Modified Audio](https://skye-cyber.github.io/FileMAC/res/demo.html)
+  [Listen to Modified Audio](https://skye-cyber.github.io/FileMAC/assets/demo.html)
   
 ---
 
@@ -135,10 +135,10 @@ filemac --audio_effect 'demo.mp3' --effect high
 filemac --audio_effect 'demo.mp4' --effect high
 ```
 **Original**<br/>
-  [Listen to Original Video](https://skye-cyber.github.io/FileMAC/res/demo.html)
+  [Listen to Original Video](https://skye-cyber.github.io/FileMAC/assets/demo.html)
   
 **Result**<br/>
-  [Listen to Modified Video](https://skye-cyber.github.io/FileMAC/res/demo.html)
+  [Listen to Modified Video](https://skye-cyber.github.io/FileMAC/assets/demo.html)
   
 ---
 
