@@ -50,6 +50,7 @@ def CliInit():
 
     parser.add_argument(
         "--convert_image",
+        nargs="+",
         help=f"Convert image file(s) to and from different format ie png to jpg.\
         example: {fg.BYELLOW}filemac --convert_image example.jpg -tf png{RESET}",
     )

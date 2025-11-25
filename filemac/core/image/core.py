@@ -147,7 +147,7 @@ class ImageConverter:
 
                 pil_img.save(output_filename, out_f)
 
-                print(f"Saved image as: {fg.DCYAN}{output_filename}{RESET}")
+            print(f"{fg.GREEN}Success{RESET}")
 
             return output_filename
         except KeyboardInterrupt:

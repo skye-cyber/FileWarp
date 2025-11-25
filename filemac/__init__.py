@@ -37,40 +37,17 @@ Scan [doc, docx, pdf]
 Extract text from an image.
         example filemac --OCR image.png
 """
-
+from . import cli
+from . import core
 from audiobot.cli import cli as audiobot
-
-from .core.image.core import (
-    GrayscaleConverter,
-    ImageCompressor,
-    ImageConverter,
-    ImageDocxConverter,
-    ImagePdfConverter,
-)
-from .core.pdf.core import PageExtractor, PDF2LongImageConverter, PDFCombine
-from .core.recorder import SoundRecorder
-from .core.video.core import VideoConverter
-from .cli.main import CliInit as main, OperationMapper
-from .cli.converter import DocConverter
 from voice.VoiceType import VoiceTypeEngine
-
 
 __version__ = "2.1.0"
 
 __all__ = [
+    "cli"
+    "core",
     "audiobot",
-    "GrayscaleConverter",
-    "ImageConverter",
-    "ImageCompressor",
-    "PDF2LongImageConverter",
-    "ImagePdfConverter",
-    "ImageDocxConverter",
-    "PDFCombine",
-    "PageExtractor",
-    "VideoConverter",
-    "SoundRecorder",
-    "DocConverter",
     "OperationMapper",
     "VoiceTypeEngine",
-    "main",
 ]
