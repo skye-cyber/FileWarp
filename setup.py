@@ -41,9 +41,9 @@ setup(
     url="https://pypi.org/project/filemac/",
     entry_points={
         "console_scripts": [
-            "filemac=filemac:main",
-            "Filemac=filemac:main",
-            "FILEMAC=filemac:main",
+            "filemac=filemac:argsdev",
+            "Filemac=filemac:argsdev",
+            "FILEMAC=filemac:argsdev",
             "audiobot=filemac:audiobot",
         ],
     },

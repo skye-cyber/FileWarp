@@ -44,6 +44,8 @@ from voice import voice_typing
 
 __version__ = "2.1.0"
 
+argsdev = cli.argsdev
+
 __all__ = [
     "cli",
     "core",
