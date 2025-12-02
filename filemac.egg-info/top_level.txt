@@ -1,7 +1,0 @@
-assets
-audiobot
-build
-docs
-filemac
-fweb
-voice
