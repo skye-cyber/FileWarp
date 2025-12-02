@@ -35,3 +35,5 @@ env/
 venv/
 *.docx
 *.doc
+*~
+*.db
