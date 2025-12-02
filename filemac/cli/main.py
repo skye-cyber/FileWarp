@@ -101,7 +101,7 @@ def CliInit():
     )
 
     parser.add_argument(
-        "-tf", "--target_format", help="Target format for conversion (optional)"
+        "-to", help="Target format for conversion (optional)"
     )
 
     parser.add_argument(
