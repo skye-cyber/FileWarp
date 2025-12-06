@@ -16,19 +16,30 @@ from tqdm.auto import tqdm
 from ..core.exceptions import FileSystemError
 from .colors import OutputFormater as OF
 from .config import OUTPUT_DIR
-from .formats import SUPPORTED_IMAGE_FORMATS
+from .formats import SUPPORTED_IMAGE_FORMATS, SUPPORTED_AUDIO_FORMATS, SUPPORTED_VIDEO_FORMATS
 from .simple import logger
 
 
-def dirbuster(_dir_):
+def map_ext_from_format(fmt: str) -> tuple:
+    if fmt in (x.lower() for x in SUPPORTED_AUDIO_FORMATS):
+        return fmt, SUPPORTED_AUDIO_FORMATS
+    elif fmt in (x.lower() for x in SUPPORTED_VIDEO_FORMATS):
+        return fmt, SUPPORTED_VIDEO_FORMATS
+    elif fmt in SUPPORTED_IMAGE_FORMATS.values():
+        return fmt, SUPPORTED_IMAGE_FORMATS
+    return None, None
+
+
+def dirbuster(_dir_, ext: list | tuple = ("pdf", "doc", "docx")) -> list:
     try:
         target = []
         for root, dirs, files in os.walk(_dir_):
             for file in files:
-                ext = file.split(".")[-1]
+                fext = file.split(".")[-1]
 
                 _path_ = os.path.join(root, file)
-                if os.path.exists(_path_) and ext.lower() in ("pdf", "doc", "docx"):
+
+                if os.path.exists(_path_) and fext.lower() in ext:
                     target.append(_path_)
         return target
     except FileNotFoundError as e:

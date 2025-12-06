@@ -28,7 +28,7 @@ class DirectoryConverter:
         self.threads = threads
         # Handle isolation and non isolation modes distinctively
         self._ls_ = (
-            ["pdf", "docx", "doc", "xlsx", "ppt", "pptxxls", "txt"]
+            ["pdf", "docx", "doc", "xlsx", "ppt", "pptx", "xls", "txt"]
             if _isolate_ is None
             else [_isolate_]
         )

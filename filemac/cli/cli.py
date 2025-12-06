@@ -8,8 +8,15 @@ from ..core.pdf.core import PageExtractor
 from ..core.exceptions import FileSystemError, FilemacError
 from pathlib import Path
 from ..utils.colors import fg, bg, rs
-
+from ..utils.decorators import dcr
+from ..utils.file_utils import dirbuster
 from ..utils.simple import logger
+from ..utils.formats import (
+    SUPPORTED_VIDEO_FORMATS,
+    SUPPORTED_IMAGE_FORMATS,
+    SUPPORTED_AUDIO_FORMATS,
+    SUPPORTED_DOC_FORMATS
+)
 
 try:
     from audiobot.cli import cli as audiobot_cli
@@ -33,38 +40,40 @@ def argsdev():
         "--convert_doc",
         nargs="+",
         help=f"Converter document file(s) to different format ie pdf_to_docx.\
-       example: {fg.BYELLOW}filemac --convert_doc example.docx -tff pdf{RESET}",
+       example: {fg.BYELLOW}filemac --convert_doc example.docx -tof pdf{RESET}",
     )
 
     parser.add_argument(
         "--convert_audio",
+        nargs="+",
         help=f"Convert audio file(s) to and from different format ie mp3 to wav\
-        example: {fg.BYELLOW}filemac --convert_audio example.mp3 -tff wav{RESET}",
+        example: {fg.BYELLOW}filemac --convert_audio example.mp3 -tof wav{RESET}",
     )
 
     parser.add_argument(
         "--convert_video",
+        nargs="+",
         help=f"Convert video file(s) to and from different format ie mp4 to mkv.\
-        example: {fg.BYELLOW}filemac --convert_video example.mp4 -tf mkv{RESET}",
+        example: {fg.BYELLOW}filemac --convert_video example.mp4 -to mkv{RESET}",
     )
 
     parser.add_argument(
         "--convert_image",
         nargs="+",
         help=f"Convert image file(s) to and from different format ie png to jpg.\
-        example: {fg.BYELLOW}filemac --convert_image example.jpg -tf png{RESET}",
+        example: {fg.BYELLOW}filemac --convert_image example.jpg -to png{RESET}",
     )
 
     parser.add_argument(
         "--convert_svg",
         help=f"Converter svg file(s) to different format ie pdf, png.\
-       example: {fg.BYELLOW}filemac --convert_svg example.svg -tff pdf{RESET}",
+       example: {fg.BYELLOW}filemac --convert_svg example.svg -tof pdf{RESET}",
     )
 
     parser.add_argument(
-        "--convert_doc2image",
+        "--doc2image",
         help=f"Convert documents to images ie png to jpg.\
-        example: {fg.BYELLOW}filemac --convert_doc2image example.pdf -tf png{RESET}",
+        example: {fg.BYELLOW}filemac --doc2image example.pdf -to png{RESET}",
     )
 
     parser.add_argument(
@@ -90,7 +99,7 @@ def argsdev():
         "-iso",
         "--isolate",
         help=f"Specify file types to isolate\
-                        for conversion, only works if directory is provided as input for the {fg.FCYAN}convert_doc{RESET} argument example: {fg.BYELLOW}filemac --convert_doc /home/user/Documents/ --isolate pdf -tf txt{RESET}",
+                        for conversion, only works if directory is provided as input for the {fg.FCYAN}convert_doc{RESET} argument example: {fg.BYELLOW}filemac --convert_doc /home/user/Documents/ --isolate pdf -to txt{RESET}",
     )
 
     parser.add_argument(
@@ -107,7 +116,7 @@ def argsdev():
     parser.add_argument(
         "--resize_image",
         help=f"change size of an image compress/decompress \
-        example: {fg.BYELLOW}filemac --resize_image example.png -tf_size 2mb -tf png {RESET}",
+        example: {fg.BYELLOW}filemac --resize_image example.png -to_size 2mb -to png {RESET}",
     )
 
     parser.add_argument(
@@ -146,7 +155,7 @@ def argsdev():
     )
 
     parser.add_argument(
-        "--OCR",
+        "--ocr",
         nargs="+",
         help=f"Extract text from an image.\
         example: {fg.BYELLOW}filemac --OCR image.png{RESET}",
@@ -192,7 +201,7 @@ def argsdev():
         "--use_extras",
         action="store_true",
         help=f"Use alternative conversion method: Overides\
-                        default method i.e: {fg.BYELLOW}filemac --convert_doc example.docx --use_extras -tf pdf{RESET}",
+                        default method i.e: {fg.BYELLOW}filemac --convert_doc example.docx --use_extras -to pdf{RESET}",
     )
 
     """Pdf join arguements--> Accepts atleast 1 arguement"""
@@ -232,8 +241,7 @@ def argsdev():
     )
 
     parser.add_argument(
-        "--t",
-        "-threads",
+        "--threads",
         type=int,
         default=3,
         help=f"Number of threads for text to speech  {fg.BYELLOW}filemac --convert_doc simpledir --no-resume -t 2{RESET}",
@@ -352,13 +360,27 @@ class OperationMapper:
             return
         if self.args.to is None:
             print(
-                f"{fg.RED}Please provide output format specified by{fg.CYAN} '-tf'{RESET}"
+                f"{fg.RED}Please provide output format specified by{fg.CYAN} '-to'{RESET}"
             )
             return
+
         from ..core.image.core import ImageConverter
 
-        conv = ImageConverter(self.args.convert_image, self.args.to)
-        conv.convert_image()
+        @dcr.for_loop_decorator(self.args.convert_image)
+        def ops(fpath):
+            if self.args.isolate and os.path.isdir(fpath):
+                if self.args.isolate not in (x.lower() for x in SUPPORTED_IMAGE_FORMATS):
+                    sys.exit(f"Format: {self.args.isolate} not supported")
+
+                files = dirbuster(fpath, (self.args.isolate.lower()))
+
+                @dcr.for_loop_decorator(files)
+                def ops(xfpath):
+                    ImageConverter(xfpath, self.args.to).convert_image()
+                ops()
+            else:
+                ImageConverter(fpath, self.args.to).convert_image()
+        ops()
 
     def doc_converter(self):
         from ..utils.formats import SUPPORTED_AUDIO_FORMATS_DIRECT
@@ -367,27 +389,29 @@ class OperationMapper:
         if self.args.to is None:
             self.ensure_target_format()
             return
-        if self.args.use_extras:
-            DocConverter.word2pdf_extra(self.args.convert_doc)
-        if (
-            len(self.args.convert_doc) <= 1
-            and not os.path.isdir(self.args.convert_doc[0])
-            and isinstance(self.args.convert_doc, list)
-            and self.args.to in SUPPORTED_AUDIO_FORMATS_DIRECT
-        ):
-            Batch_Audiofy(self.args.convert_doc, self.args.no_resume, self.args.threads)
-        elif os.path.isdir(self.args.convert_doc[0]):
-            conv = DirectoryConverter(
-                self.args.convert_doc[0],
-                self.args.to,
-                self.args.no_resume,
-                self.args.threads,
-                self.args.isolate,
-            )
-            conv._unbundle_dir_()
-        elif os.path.isfile(self.args.convert_doc[0]):
-            ev = MethodMappingEngine(self.args.convert_doc[0], self.args.to)
-            ev.document_eval()
+
+        @dcr.for_loop_decorator(self.args.convert_doc)
+        def ops(fpath):
+            if self.args.use_extras:
+                DocConverter.word2pdf_extra(fpath)
+            if (
+                len(fpath) <= 1
+                and not os.path.isdir(fpath)
+                and isinstance(fpath, list)
+                and self.args.to in SUPPORTED_AUDIO_FORMATS_DIRECT
+            ):
+                Batch_Audiofy(fpath, self.args.no_resume, self.args.threads)
+            elif os.path.isdir(fpath):
+                DirectoryConverter(
+                    fpath,
+                    self.args.to,
+                    self.args.no_resume,
+                    self.args.threads,
+                    self.args.isolate,
+                )._unbundle_dir_()
+            elif os.path.isfile(fpath):
+                MethodMappingEngine(fpath, self.args.to).document_eval()
+        ops()
 
     def handle_help(self):
         if not self.args and not self.remaining_args:
@@ -405,9 +429,8 @@ class OperationMapper:
 
     def handle_doc_conversion_help(self):
         if self.args.convert_doc and self.args.convert_doc[0] == "help":
-            from ..utils.formats import SUPPORTED_DOC_FORMATS
-
-            print(SUPPORTED_DOC_FORMATS)
+            from ..utils.formats import SUPPORTED_DOC_FORMATS_HELP
+            print(SUPPORTED_DOC_FORMATS_HELP)
         return
 
     def handle_video_conversion_help(self):
@@ -423,8 +446,21 @@ class OperationMapper:
             return
         from ..core.video.core import VideoConverter
 
-        ev = VideoConverter(self.args.convert_video, self.args.to)
-        ev.CONVERT_VIDEO()
+        @dcr.for_loop_decorator(self.args.convert_video)
+        def ops(fpath):
+            if self.args.isolate and os.path.isdir(fpath):
+                if self.args.isolate not in (x.lower() for x in SUPPORTED_VIDEO_FORMATS):
+                    sys.exit(f"Format: {self.args.isolate} not supported")
+
+                files = dirbuster(fpath, (self.args.isolate.lower()))
+
+                @dcr.for_loop_decorator(files)
+                def ops(fpath):
+                    VideoConverter(fpath, self.args.to).CONVERT_VIDEO()
+                ops()
+            else:
+                VideoConverter(fpath, self.args.to).CONVERT_VIDEO()
+        ops()
 
     def handle_svg(self):
         from ..core.svg.core import SVGConverter
@@ -440,15 +476,38 @@ class OperationMapper:
             raise FilemacError("Target format not valid for svg input.")
         from ..utils.file_utils import generate_filename
 
-        output = generate_filename(
-            ext=self.args.to, basedir=Path(self.args.convert_svg)
-        )
-        target(
-            input_svg=self.args.convert_svg,
-            output_path=output.as_posix(),
-            is_string=False,
-        )
-        print(f"Saved To:{output}")
+        @dcr.for_loop_decorator(self.args.convert_svg)
+        def ops(fpath):
+            if self.args.isolate and os.path.isdir(fpath):
+                if self.args.isolate == 'svg':
+                    sys.exit(f"Format: {self.args.isolate} not supported")
+
+                files = dirbuster(fpath, (self.args.isolate.lower()))
+
+                @dcr.for_loop_decorator(files)
+                def ops(xfpath):
+                    output = generate_filename(
+                        ext=self.args.to, basedir=Path(fpath)
+                    )
+                    target(
+                        input_svg=xfpath,
+                        output_path=output.as_posix(),
+                        is_string=False,
+                    )
+                    print(f"Saved To:{output}")
+                ops()
+
+            else:
+                output = generate_filename(
+                    ext=self.args.to, basedir=Path(fpath)
+                )
+                target(
+                    input_svg=fpath,
+                    output_path=output.as_posix(),
+                    is_string=False,
+                )
+                print(f"Saved To:{output}")
+        ops()
 
     def handle_image_resize(self):
         from ..core.image.core import ImageCompressor
@@ -457,24 +516,46 @@ class OperationMapper:
         res.resize_image(self.args.t_size)
 
     def handle_doc_to_image_conversion(self):
-        conv = DocConverter(self.args.convert_doc2image)
-        conv.doc2image(self.args.to)
+        if self.args.isolate and os.path.isdir(self.args.doc2image):
+            if self.args.isolate not in (x.lower() for x in SUPPORTED_DOC_FORMATS):
+                sys.exit(f"Format: {self.args.isolate} not supported")
+
+            files = dirbuster(self.args.doc2image, (self.args.isolate.lower()))
+
+            @dcr.for_loop_decorator(files)
+            def ops(fpath):
+                DocConverter(fpath).doc2image(self.args.to)
+
+            ops()
+        else:
+            DocConverter(self.args.doc2image).doc2image(self.args.to)
 
     def handle_audio_conversion_help(self):
         if self.args.convert_audio == "help":
             from ..utils.formats import SUPPORTED_AUDIO_FORMATS_SHOW
-
             print(SUPPORTED_AUDIO_FORMATS_SHOW)
         return
 
     def handle_audio_conversion(self):
-        if self.agrs.target_format is None:
+        if self.args.to is None:
             self.ensure_target_format()
             return
         from ..core.audio.core import AudioConverter
+        if self.args.isolate and os.path.isdir(self.args.convert_audio[0]):
+            if self.args.isolate not in (x.lower() for x in SUPPORTED_AUDIO_FORMATS):
+                sys.exit(f"Format: {self.args.isolate} not supported")
 
-        ev = AudioConverter(self.args.convert_audio, self.args.to)
-        ev.pydub_conv()
+            files = dirbuster(self.args.convert_audio[0], (self.args.isolate.lower()))
+
+            @dcr.for_loop_decorator(files)
+            def ops(fpath):
+                AudioConverter(fpath, self.args.to).pydub_conv()
+            ops()
+        else:
+            @dcr.for_loop_decorator(self.args.convert_audio)
+            def ops(fpath):
+                AudioConverter(fpath, self.args.to).pydub_conv()
+            ops()
 
     def handle_audio_extraction(self):
         from ..core.audio.core import AudioExtracter
@@ -503,8 +584,10 @@ class OperationMapper:
     def handle_ocr(self):
         from ..core.ocr import ExtractText
 
-        ocr = ExtractText(self.args.OCR, self.args.separator)
-        ocr.run()
+        @dcr.for_loop_decorator(self.args.ocr)
+        def ops(fpath):
+            ExtractText(fpath, self.args.separator).run()
+        ops()
 
     def handle_video_analysis(self):
         from ..miscellaneous.video_analyzer import SimpleAnalyzer
@@ -563,12 +646,11 @@ class OperationMapper:
         from ..core.image.core import ImageDocxConverter
 
         _input = self.args.image2word
-        if isinstance(_input, list):
+        if isinstance(_input, (list, tuple)):
             if len(_input) > 1:
-                converter = ImageDocxConverter(image_list=_input)
+                ImageDocxConverter(image_list=_input).run()
             else:
-                converter = ImageDocxConverter(input_dir=_input[0])
-        converter.run()
+                ImageDocxConverter(input_dir=_input[0]).run()
 
     def image2grayscale(self):
         from ..core.image.core import GrayscaleConverter
@@ -645,11 +727,11 @@ class OperationMapper:
             ),
             args.version: self.display_version,
             tuple(args.convert_doc or ()): self.doc_converter,
-            args.convert_video: self.handle_video_conversion,
-            args.convert_image: self.image_converter,
+            tuple(args.convert_video or ()): self.handle_video_conversion,
+            tuple(args.convert_image or ()): self.image_converter,
             args.resize_image: self.handle_image_resize,
-            args.convert_doc2image: self.handle_doc_to_image_conversion,
-            args.convert_audio: self.handle_audio_conversion,
+            args.doc2image: self.handle_doc_to_image_conversion,
+            tuple(args.convert_audio or ()): self.handle_audio_conversion,
             args.extract_audio: self.handle_audio_extraction,
             args.scan: self.handle_scan_pdf,
             args.scanAsImg: self.handle_scan_images,
@@ -657,7 +739,7 @@ class OperationMapper:
             args.scanAsLong_Image: self.handle_scan_long_image,
             args.convert_svg: self.handle_svg,
             args.voicetype: self.voicetype,
-            tuple(args.OCR or ()): self.handle_ocr,
+            tuple(args.ocr or ()): self.handle_ocr,
             args.Analyze_video: self.handle_video_analysis,
             tuple(args.AudioJoin or ()): self.handle_audio_join,
             args.Richtext2word: self.handle_advanced_text_to_word,

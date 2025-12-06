@@ -13,10 +13,17 @@ class Decorators:
         """
 
         def decorator(func):
-            def wrapper(self, *args, **kwargs):
+            def wrapper(*args, **kwargs):
                 for item in data_list:
-                    func(self, item, *args, **kwargs)
+                    func(item, *args, **kwargs)
 
             return wrapper
 
         return decorator
+
+    def threading(self):
+        ...
+
+
+dcr = Decorators()
+for_loop = dcr.for_loop_decorator

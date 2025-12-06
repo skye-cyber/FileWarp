@@ -4,7 +4,9 @@ from .colors import fg, bg, rs
 
 RESET = rs
 
-SUPPORTED_DOC_FORMATS = f"""
+SUPPORTED_DOC_FORMATS = ["pdf", 'ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx', 'txt']
+
+SUPPORTED_DOC_FORMATS_HELP = f"""
 |---------------------------------------------------------------------------
 |{bg.BBLUE}Input format{RESET}                    |{bg.BBLUE}Output format{RESET}                             |
 |________________________________|__________________________________________|
@@ -36,7 +38,7 @@ SUPPORTED_AUDIO_FORMATS = [
     "raw",
     "bpf",
     "aac",
-]  # Advanced Audio Codec]  (Free Lossless Audio Codec)
+]  # Advanced Audio Codec  (Free Lossless Audio Codec)
 
 SUPPORTED_AUDIO_FORMATS_DIRECT = [
     "mp3",
