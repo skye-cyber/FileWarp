@@ -799,4 +799,4 @@ class OperationMapper:
 
 
 if __name__ == "__main__":
-    CliInit()
+    argsdev()
