@@ -66,6 +66,7 @@ def argsdev():
 
     parser.add_argument(
         "--convert_svg",
+        nargs="+",
         help=f"Converter svg file(s) to different format ie pdf, png.\
        example: {fg.BYELLOW}filemac --convert_svg example.svg -tof pdf{RESET}",
     )
@@ -366,7 +367,7 @@ class OperationMapper:
 
         from ..core.image.core import ImageConverter
 
-        @dcr.for_loop_decorator(self.args.convert_image)
+        @dcr.for_loop(self.args.convert_image)
         def ops(fpath):
             if self.args.isolate and os.path.isdir(fpath):
                 if self.args.isolate not in (x.lower() for x in SUPPORTED_IMAGE_FORMATS):
@@ -374,7 +375,7 @@ class OperationMapper:
 
                 files = dirbuster(fpath, (self.args.isolate.lower()))
 
-                @dcr.for_loop_decorator(files)
+                @dcr.for_loop(files)
                 def ops(xfpath):
                     ImageConverter(xfpath, self.args.to).convert_image()
                 ops()
@@ -390,7 +391,7 @@ class OperationMapper:
             self.ensure_target_format()
             return
 
-        @dcr.for_loop_decorator(self.args.convert_doc)
+        @dcr.for_loop(self.args.convert_doc)
         def ops(fpath):
             if self.args.use_extras:
                 DocConverter.word2pdf_extra(fpath)
@@ -446,7 +447,7 @@ class OperationMapper:
             return
         from ..core.video.core import VideoConverter
 
-        @dcr.for_loop_decorator(self.args.convert_video)
+        @dcr.for_loop(self.args.convert_video)
         def ops(fpath):
             if self.args.isolate and os.path.isdir(fpath):
                 if self.args.isolate not in (x.lower() for x in SUPPORTED_VIDEO_FORMATS):
@@ -454,7 +455,7 @@ class OperationMapper:
 
                 files = dirbuster(fpath, (self.args.isolate.lower()))
 
-                @dcr.for_loop_decorator(files)
+                @dcr.for_loop(files)
                 def ops(fpath):
                     VideoConverter(fpath, self.args.to).CONVERT_VIDEO()
                 ops()
@@ -476,15 +477,15 @@ class OperationMapper:
             raise FilemacError("Target format not valid for svg input.")
         from ..utils.file_utils import generate_filename
 
-        @dcr.for_loop_decorator(self.args.convert_svg)
+        @dcr.for_loop(self.args.convert_svg)
         def ops(fpath):
             if self.args.isolate and os.path.isdir(fpath):
-                if self.args.isolate == 'svg':
+                if self.args.isolate.lower() != 'svg':
                     sys.exit(f"Format: {self.args.isolate} not supported")
 
                 files = dirbuster(fpath, (self.args.isolate.lower()))
 
-                @dcr.for_loop_decorator(files)
+                @dcr.for_loop(files)
                 def ops(xfpath):
                     output = generate_filename(
                         ext=self.args.to, basedir=Path(fpath)
@@ -522,7 +523,7 @@ class OperationMapper:
 
             files = dirbuster(self.args.doc2image, (self.args.isolate.lower()))
 
-            @dcr.for_loop_decorator(files)
+            @dcr.for_loop(files)
             def ops(fpath):
                 DocConverter(fpath).doc2image(self.args.to)
 
@@ -547,12 +548,12 @@ class OperationMapper:
 
             files = dirbuster(self.args.convert_audio[0], (self.args.isolate.lower()))
 
-            @dcr.for_loop_decorator(files)
+            @dcr.for_loop(files)
             def ops(fpath):
                 AudioConverter(fpath, self.args.to).pydub_conv()
             ops()
         else:
-            @dcr.for_loop_decorator(self.args.convert_audio)
+            @dcr.for_loop(self.args.convert_audio)
             def ops(fpath):
                 AudioConverter(fpath, self.args.to).pydub_conv()
             ops()
@@ -584,7 +585,7 @@ class OperationMapper:
     def handle_ocr(self):
         from ..core.ocr import ExtractText
 
-        @dcr.for_loop_decorator(self.args.ocr)
+        @dcr.for_loop(self.args.ocr)
         def ops(fpath):
             ExtractText(fpath, self.args.separator).run()
         ops()
@@ -729,17 +730,17 @@ class OperationMapper:
             tuple(args.convert_doc or ()): self.doc_converter,
             tuple(args.convert_video or ()): self.handle_video_conversion,
             tuple(args.convert_image or ()): self.image_converter,
+            tuple(args.convert_audio or ()): self.handle_audio_conversion,
+            tuple(args.ocr or ()): self.handle_ocr,
+            tuple(args.convert_svg or ()): self.handle_svg,
             args.resize_image: self.handle_image_resize,
             args.doc2image: self.handle_doc_to_image_conversion,
-            tuple(args.convert_audio or ()): self.handle_audio_conversion,
             args.extract_audio: self.handle_audio_extraction,
             args.scan: self.handle_scan_pdf,
             args.scanAsImg: self.handle_scan_images,
             args.doc_long_image: self.handle_doc_to_long_image,
             args.scanAsLong_Image: self.handle_scan_long_image,
-            args.convert_svg: self.handle_svg,
             args.voicetype: self.voicetype,
-            tuple(args.ocr or ()): self.handle_ocr,
             args.Analyze_video: self.handle_video_analysis,
             tuple(args.AudioJoin or ()): self.handle_audio_join,
             args.Richtext2word: self.handle_advanced_text_to_word,
