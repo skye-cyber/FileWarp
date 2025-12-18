@@ -1,54 +1,21 @@
-"""
-....////////   ///  ///      /////////   ///////  //////    //////   ////////
-   //         ///  ///      //          //    // //  //   //    // ///
-  /////////  ///  ///      ////////    //     ///   //   //----//  //
- //         ///  //////// //_____     //           //   //    //   //////////
+# FileMAC Package
+# Main package initialization
+from pathlib import Path
+__version__ = open(Path(__file__).parent.parent / "version.txt").read().strip()
 
-Converter document file(s) to different format ie pdf_to_docx.
-    example filemac --convert_doc example.docx -t pdf
+# Import the main CLI functions
+from .cli.cli import argsdev as filemac_cli
+from .cli.app import enhanced_argsdev as filemac_app
 
-Convert audio file(s) to and from different format ie mp3 to wav
-        example filemac --convert_audio example.mp3 -t wav
+# Audiobot CLI (if available)
+try:
+    from audiobot.cli import cli as audiobot_cli
+except ImportError:
+    audiobot_cli = None
 
-Convert video file(s) to and from different format ie mp4 to mkv.
-        example filemac --convert_video example.mp4 -t mkv
+# Main entry points
+__all__ = ["filemac_cli", "filemac_app", "audiobot_cli"]
 
-Convert image file(s) to and from different format ie png to jpg.
-        example filemac --convert_image example.jpg -t png
-
-Extract audio from a video. example filemac -xA example.mp4
-
-Analyze a given video.
-        example filemac --analyze_video example.mp4
-
-hange size of an image compress/decompress
-        example filemac --resize_image example.png -t_size 2mb -t png
-
-Scan pdf file and extract text
-                        example filemac --scan example.pdf
-
-Convert pdf file to long image
-                        example filemac --doc_long_image example.pdf
-
-Scan [doc, docx, pdf]
-        file and extract text,-> very effective
-                    example filemac --scanAsImg example.pdf
-
-Extract text from an image.
-        example filemac --OCR image.png
-"""
-from . import cli
-from . import core
-import audiobot
-from voice import voice_typing
-
-__version__ = "2.1.0"
-
-argsdev = cli.argsdev
-
-__all__ = [
-    "cli",
-    "core",
-    "audiobot",
-    "voice_typing",
-]
+# Aliases for backward compatibility
+argsdev = filemac_cli
+enhanced_argsdev = filemac_app
