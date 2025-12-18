@@ -3,15 +3,15 @@ import argparse
 import os
 import sys
 from functools import lru_cache
-from ..core.document import DocConverter
-from ..core.pdf.core import PageExtractor
-from ..core.exceptions import FileSystemError, FilemacError
+from filemac.core.document import DocConverter
+from filemac.core.pdf.core import PageExtractor
+from filemac.core.exceptions import FileSystemError, FilemacError
 from pathlib import Path
-from ..utils.colors import fg, bg, rs
-from ..utils.decorators import dcr
-from ..utils.file_utils import dirbuster
-from ..utils.simple import logger
-from ..utils.formats import (
+from filemac.utils.colors import fg, bg, rs
+from filemac.utils.decorators import dcr
+from filemac.utils.file_utils import dirbuster
+from filemac.utils.simple import logger
+from filemac.utils.formats import (
     SUPPORTED_VIDEO_FORMATS,
     SUPPORTED_IMAGE_FORMATS,
     SUPPORTED_AUDIO_FORMATS,
@@ -339,10 +339,10 @@ class OperationMapper:
         return
 
     def pdfjoin(self):
-        from ..core.pdf.core import PDFCombine
+        from filemac.core.pdf.core import PDFCombine
 
         if self.args.pdfjoin[0].lower().strip() == "help":
-            from ..utils.helpmaster import pdf_combine_help
+            from filemac.utils.helpmaster import pdf_combine_help
 
             opts, helper, example = pdf_combine_help()
             print(f"{opts}\n {helper}\n {example}")
@@ -352,7 +352,7 @@ class OperationMapper:
 
     def image_converter(self):
         if self.args.convert_image == "help":
-            from ..utils.formats import SUPPORTED_IMAGE_FORMATS_SHOW
+            from filemac.utils.formats import SUPPORTED_IMAGE_FORMATS_SHOW
 
             print(SUPPORTED_IMAGE_FORMATS_SHOW)
             return
@@ -365,7 +365,7 @@ class OperationMapper:
             )
             return
 
-        from ..core.image.core import ImageConverter
+        from filemac.core.image.core import ImageConverter
 
         @dcr.for_loop(self.args.convert_image)
         def ops(fpath):
@@ -384,7 +384,7 @@ class OperationMapper:
         ops()
 
     def doc_converter(self):
-        from ..utils.formats import SUPPORTED_AUDIO_FORMATS_DIRECT
+        from filemac.utils.formats import SUPPORTED_AUDIO_FORMATS_DIRECT
         from .converter import MethodMappingEngine, DirectoryConverter, Batch_Audiofy
 
         if self.args.to is None:
@@ -430,13 +430,13 @@ class OperationMapper:
 
     def handle_doc_conversion_help(self):
         if self.args.convert_doc and self.args.convert_doc[0] == "help":
-            from ..utils.formats import SUPPORTED_DOC_FORMATS_HELP
+            from filemac.utils.formats import SUPPORTED_DOC_FORMATS_HELP
             print(SUPPORTED_DOC_FORMATS_HELP)
         return
 
     def handle_video_conversion_help(self):
         if self.args.convert_video and self.args.convert_video == "help":
-            from ..utils.formats import SUPPORTED_VIDEO_FORMATS_SHOW
+            from filemac.utils.formats import SUPPORTED_VIDEO_FORMATS_SHOW
 
             print(SUPPORTED_VIDEO_FORMATS_SHOW)
         return
@@ -445,7 +445,7 @@ class OperationMapper:
         if hasattr(self, "agrs") and self.agrs.target_format is None:
             self.ensure_target_format()
             return
-        from ..core.video.core import VideoConverter
+        from filemac.core.video.core import VideoConverter
 
         @dcr.for_loop(self.args.convert_video)
         def ops(fpath):
@@ -464,7 +464,7 @@ class OperationMapper:
         ops()
 
     def handle_svg(self):
-        from ..core.svg.core import SVGConverter
+        from filemac.core.svg.core import SVGConverter
 
         converter = SVGConverter()
         _map_ = {
@@ -475,7 +475,7 @@ class OperationMapper:
         target = _map_.get(self.args.to, None)
         if not target:
             raise FilemacError("Target format not valid for svg input.")
-        from ..utils.file_utils import generate_filename
+        from filemac.utils.file_utils import generate_filename
 
         @dcr.for_loop(self.args.convert_svg)
         def ops(fpath):
@@ -511,7 +511,7 @@ class OperationMapper:
         ops()
 
     def handle_image_resize(self):
-        from ..core.image.core import ImageCompressor
+        from filemac.core.image.core import ImageCompressor
 
         res = ImageCompressor(self.args.resize_image)
         res.resize_image(self.args.t_size)
@@ -533,7 +533,7 @@ class OperationMapper:
 
     def handle_audio_conversion_help(self):
         if self.args.convert_audio == "help":
-            from ..utils.formats import SUPPORTED_AUDIO_FORMATS_SHOW
+            from filemac.utils.formats import SUPPORTED_AUDIO_FORMATS_SHOW
             print(SUPPORTED_AUDIO_FORMATS_SHOW)
         return
 
@@ -541,7 +541,7 @@ class OperationMapper:
         if self.args.to is None:
             self.ensure_target_format()
             return
-        from ..core.audio.core import AudioConverter
+        from filemac.core.audio.core import AudioConverter
         if self.args.isolate and os.path.isdir(self.args.convert_audio[0]):
             if self.args.isolate not in (x.lower() for x in SUPPORTED_AUDIO_FORMATS):
                 sys.exit(f"Format: {self.args.isolate} not supported")
@@ -559,7 +559,7 @@ class OperationMapper:
             ops()
 
     def handle_audio_extraction(self):
-        from ..core.audio.core import AudioExtracter
+        from filemac.core.audio.core import AudioExtracter
 
         vi = AudioExtracter(self.args.extract_audio)
         vi.moviepyextract()
@@ -577,13 +577,13 @@ class OperationMapper:
         sc.scanAsLongImg()
 
     def handle_doc_to_long_image(self):
-        from ..core.pdf.core import PDF2LongImageConverter
+        from filemac.core.pdf.core import PDF2LongImageConverter
 
         conv = PDF2LongImageConverter(self.args.doc_long_image)
         conv.preprocess()
 
     def handle_ocr(self):
-        from ..core.ocr import ExtractText
+        from filemac.core.ocr import ExtractText
 
         @dcr.for_loop(self.args.ocr)
         def ops(fpath):
@@ -591,7 +591,7 @@ class OperationMapper:
         ops()
 
     def handle_video_analysis(self):
-        from ..miscellaneous.video_analyzer import SimpleAnalyzer
+        from filemac.miscellaneous.video_analyzer import SimpleAnalyzer
 
         analyzer = SimpleAnalyzer(self.args.Analyze_video)
         analyzer.SimpleAnalyzer()
@@ -603,7 +603,7 @@ class OperationMapper:
         joiner.worker()
 
     def handle_advanced_text_to_word(self):
-        from ..core.text.core import StyledText
+        from filemac.core.text.core import StyledText
 
         init = StyledText(
             self.args.Richtext2word, None, self.args.font_size, self.args.font_name
@@ -614,7 +614,7 @@ class OperationMapper:
         _entry_(self.args.extract_pages)
 
     def ImageExtractor(self):
-        from ..core.image.extractor import process_files
+        from filemac.core.image.extractor import process_files
 
         if self.args.size:
             size = tuple([int(x) for x in self.args.size.lower().split("x")])
@@ -623,7 +623,7 @@ class OperationMapper:
             process_files(self.args.image_extractor)
 
     def image2pdf(self):
-        from ..core.image.core import ImagePdfConverter
+        from filemac.core.image.core import ImagePdfConverter
 
         _input = (
             list(self.args.image2pdf)
@@ -644,7 +644,7 @@ class OperationMapper:
         converter.run()
 
     def image2word(self):
-        from ..core.image.core import ImageDocxConverter
+        from filemac.core.image.core import ImageDocxConverter
 
         _input = self.args.image2word
         if isinstance(_input, (list, tuple)):
@@ -654,7 +654,7 @@ class OperationMapper:
                 ImageDocxConverter(input_dir=_input[0]).run()
 
     def image2grayscale(self):
-        from ..core.image.core import GrayscaleConverter
+        from filemac.core.image.core import GrayscaleConverter
 
         _input = self.args.image2gray
 
@@ -685,14 +685,14 @@ class OperationMapper:
             return
 
     def handle_recording(self):
-        from ..core.recorder import SoundRecorder
+        from filemac.core.recorder import SoundRecorder
 
         rec = SoundRecorder()
         return rec.run()
 
     def handle_html2word(self):
-        from ..core.html import HTML2Word
-        from ..utils.file_utils import generate_filename
+        from filemac.core.html import HTML2Word
+        from filemac.utils.file_utils import generate_filename
 
         try:
             converter = HTML2Word()

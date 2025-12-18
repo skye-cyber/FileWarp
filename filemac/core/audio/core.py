@@ -45,7 +45,7 @@ class AudioConverter:
                 for item in input_list
                 if any(item.lower().endswith(ext) for ext in SUPPORTED_AUDIO_FORMATS)
             ]
-            print(f"{fg.BYELLOW}Initializing conversion..{RESET}")
+            print(f"{fg.YELLOW}Initializing conversion..{RESET}")
 
             def wav_redudancy():
                 # Load the mp3 file using Pydub
@@ -63,7 +63,6 @@ class AudioConverter:
                     # print(f"{fg.BMAGENTA}Converting to {output_filename}{RESET}")
                     audio.export(output_filename, format=out_f)
                     # new_audio = pydub.AudioSegment.from_file('output_audio.')
-                    print(f"{fg.GREEN}success{RESET}")
 
                 elif file[-3:].lower() == "m4a" or out_f.lower() == "m4a":
                     m4a(file, out_f)
@@ -78,6 +77,7 @@ class AudioConverter:
                     print(f"{fg.RED}Unsupported output format{RESET}")
                     sys.exit(1)
 
+            print(f"{fg.GREEN}success{RESET}")
         except KeyboardInterrupt:
             print("\nQuit❕")
             sys.exit(1)

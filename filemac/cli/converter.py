@@ -1,14 +1,14 @@
 import os
 import sys
 from typing import List, Union
-from ..core.warning import default_supressor
-from ..utils.simple import logger
-from ..utils.colors import fg, rs
-from ..core.tts.gtts import GoogleTTS
-from ..utils.formats import (
+from filemac.core.warning import default_supressor
+from filemac.utils.simple import logger
+from filemac.utils.colors import fg, rs
+from filemac.core.tts.gtts import GoogleTTS
+from filemac.utils.formats import (
     SUPPORTED_AUDIO_FORMATS_DIRECT,
 )
-from ..core.document import DocConverter
+from filemac.core.document import DocConverter
 
 RESET = rs
 default_supressor()
