@@ -40,14 +40,14 @@ def argsdev():
         "--convert_doc",
         nargs="+",
         help=f"Converter document file(s) to different format ie pdf_to_docx.\
-       example: {fg.BYELLOW}filemac --convert_doc example.docx -tof pdf{RESET}",
+       example: {fg.BYELLOW}filemac --convert_doc example.docx -to pdf{RESET}",
     )
 
     parser.add_argument(
         "--convert_audio",
         nargs="+",
         help=f"Convert audio file(s) to and from different format ie mp3 to wav\
-        example: {fg.BYELLOW}filemac --convert_audio example.mp3 -tof wav{RESET}",
+        example: {fg.BYELLOW}filemac --convert_audio example.mp3 -to wav{RESET}",
     )
 
     parser.add_argument(
@@ -68,7 +68,7 @@ def argsdev():
         "--convert_svg",
         nargs="+",
         help=f"Converter svg file(s) to different format ie pdf, png.\
-       example: {fg.BYELLOW}filemac --convert_svg example.svg -tof pdf{RESET}",
+       example: {fg.BYELLOW}filemac --convert_svg example.svg -to pdf{RESET}",
     )
 
     parser.add_argument(
