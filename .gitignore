@@ -24,6 +24,8 @@ filemac.egg-info/**
 # Ignore operating system files
 .DS_Store
 Thumbs.db
+*.db
+*.sqlite*
 
 # Ignore log files
 *.log

@@ -1,25 +1,26 @@
-# filemac
+# filewarp
 A python file `conversion`, `manipulation`, `Analysis` toolkit
 `This is a Linux command-line interface (CLI) utility that coverts documents from one format to another,
 analyzes files, manipulates files.
 Your can also convert text file to mp3 format using google Text to speech library (gTTS).`
+
 ## Name variations
 ```shell
-   filemac -h
-   Filemac -h
-   FILEMAC -h
+   filewarp -h
+   Filewarp -h
+   warp -h
    ```
 
 ## Installation
 1. using pip
 
    ```shell
-	pip install filemac
+	pip install filewarp
    ```
 2. Install from github
 
     ```shell
-    pip install git+https://github.com/skye-cyber/FileMAC.git
+    pip install git+https://github.com/skye-cyber/FileWarp.git
     ```
 ## Usage
 
@@ -60,7 +61,7 @@ Replace `[options]` with the appropriate command-line options based on the funct
 1. Example command 1:
 
    ```shell
-   filemac --convert_doc example.docx -t pdf
+   filewarp --convert_doc example.docx -t pdf
    ```
     **Supported formats For document conversion**
        `1`.  PDF to (word, txt, audio\[tts\]) 
@@ -77,7 +78,7 @@ the output file assumes the base name of the input file but the extension confor
 
 2. converting text mp3 to wav
    ```shell
-   filemac --convert_audio example.mp3 -t wav
+   filewarp --convert_audio example.mp3 -t wav
     ```
     **Supported formats For audio conversion**
     - (``wav, mp3, ogg, flv, ogv, avi, mkv, mov, webm``)
@@ -85,12 +86,12 @@ the output file assumes the base name of the input file but the extension confor
 
 3. Extract text from images
     ```shell
-    filemac --OCR image.jpg
+    filewarp --OCR image.jpg
     ```
 
 4. converting videos
    ```shell
-   filemac --convert_video example.mp4 -t wav
+   filewarp --convert_video example.mp4 -t wav
     ```
     **Supported formats For video conversion**
     (``mp4, avi, ogv, webm, mov, mkv, flv, wmv``)
@@ -98,7 +99,7 @@ the output file assumes the base name of the input file but the extension confor
 
 5. converting images
    ```shell
-   filemac --convert_image example.png -t jpg
+   filewarp --convert_image example.png -t jpg
     ```
 #### Supported formats For audio conversion
        `1`.JPEG: `.jpg`
@@ -119,7 +120,7 @@ the output file assumes the base name of the input file but the extension confor
 ---
 #### Audio 
 ```shell
-filemac --audio_effect 'demo.mp3' --effect high
+filewarp --audio_effect 'demo.mp3' --effect high
 ```
 
 **Original**<br/>
@@ -132,7 +133,7 @@ filemac --audio_effect 'demo.mp3' --effect high
 
 #### Video
 ```shell
-filemac --audio_effect 'demo.mp4' --effect high
+filewarp --audio_effect 'demo.mp4' --effect high
 ```
 **Original**<br/>
   [Listen to Original Video](https://skye-cyber.github.io/FileMAC/res/demo.html)
@@ -145,7 +146,7 @@ filemac --audio_effect 'demo.mp4' --effect high
 ## Help
 in any case you can pass the string help to an option to see its supported operations or inputs nd output formats.
 ```shell
-   filemac --convert_doc help
+   filewarp --convert_doc help
 ```
 The above command displays the surported input and output formats for document conversion.
 ## Contributing
