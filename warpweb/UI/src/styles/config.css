@@ -1,0 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html{
+    scroll-behavior: smooth;
+}
+.scrollbar-hide {
+    /* Hide scrollbar for Chrome, Safari, and Edge */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    overflow: -moz-scrollbars-none; /* Older Firefox */
+    overflow-y: scroll; /* Add this to ensure the content is scrollable */
+    &::-webkit-scrollbar {
+        display: none;  /* Hide scrollbar for Chrome, Safari, and Edge */
+    }
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+.pulse {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+}
+
+.pulse:hover {
+    transform: scale(1.1);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse-hover {
+    display: inline-block;
+}
+
+.pulse-hover:hover {
+    animation: pulse 1s infinite;
+}
+
+.scrollbar-custom{
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 transparent;
+}
+
+.dark .scrollbar-custom{
+    scrollbar-color: #4a4a6a transparent;
+}
+
+/* Optional: Add transitions for more natural feel */
+.scroll-smooth:-webkit-scrollbar {
+    scroll-behavior: smooth;
+}
+
+/* Reset default scrollbar */
+.scrollbar-rounded::-webkit-scrollbar-thumb {
+    border-radius: 9999px; /* fully rounded */
+}
+
+
+/* Exclude elements with .scrollbar-default */
+.scrollbar-default::-webkit-scrollbar {
+    all: unset;
+}
+
+
+@keyframes modalEnter {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes modalExit {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.animate-enter {
+    animation: modalEnter 0.4s ease-out forwards;
+}
+
+.animate-exit {
+    animation: modalExit 0.3s ease-in forwards;
+}
+
+.glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.dark-glass {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced animations */
+@keyframes smoothProgress {
+    0% { width: 100%; }
+    100% { width: 0%; }
+}
+
+.progress-bar-smooth {
+    animation: smoothProgress linear forwards;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.icon-pulse {
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+/* Glass morphism effects */
+.message-toast {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Smooth transitions */
+.message-toast {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* canvas toggle styling*/
+@keyframes wave {
+    0%, 100% { transform: scaleY(0.5); }
+    50% { transform: scaleY(1.5); }
+}
+
+.animate-wave {
+    animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes ping {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    75%, 100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.animate-ping {
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/*Copy modal styling*/
+@keyframes ping-slow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes progress {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+.animate-ping-slow {
+    animation: ping-slow 2s ease-in-out infinite;
+}
+
+.animate-progress {
+    animation: progress 4.5s ease-in-out forwards;
+}
+
+@keyframes progress-inverse {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-progress-inverse {
+    animation: progress-inverse 4.5s ease-in-out forwards;
+}
+
+.waveform {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.bar {
+    width: 3px;
+    height: 10px;
+    background-color: #3b82f6;
+    border-radius: 3px;
+    animation: wave 1.2s infinite ease-in-out;
+}
+
+@keyframes wave {
+    0%,
+    100% {
+        transform: scaleY(0.5);
+    }
+    50% {
+        transform: scaleY(1.8);
+    }
+}
+
+.bar:nth-child(1) {
+    animation-delay: 0s;
+}
+.bar:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.bar:nth-child(3) {
+    animation-delay: 0.2s;
+}
+.bar:nth-child(4) {
+    animation-delay: 0.3s;
+}
+.bar:nth-child(5) {
+    animation-delay: 0.4s;
+}
+.bar:nth-child(6) {
+    animation-delay: 0.5s;
+}
+.bar:nth-child(7) {
+    animation-delay: 0.6s;
+}
+.bar:nth-child(8) {
+    animation-delay: 0.7s;
+}
+.bar:nth-child(9) {
+    animation-delay: 0.8s;
+}
+.bar:nth-child(10) {
+    animation-delay: 0.9s;
+}
+
+@media print {
+    /* Force all MUI icons to be white */
+    .MuiSvgIcon-root,
+    .MuiChip-icon,
+    .MuiChip-icon svg {
+        color: white !important;
+        fill: white !important;
+        stroke: white !important;
+    }
+    body {
+        margin: 4 !important;
+        padding: 2 !important;
+    }
+}
