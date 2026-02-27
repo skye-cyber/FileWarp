@@ -1,5 +1,5 @@
 {
-    "name": "filemac_web",
+    "name": "warpweb",
     "version": "1.0",
     "private": true,
     "description": "File Management Suite",
@@ -7,10 +7,7 @@
         "tailwindcss": "tailwindcss -i core/static/css/config.css -o core/static/css/styles.css --watch --minify"
     },
     "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
+        "extends": []
     },
     "browserslist": {
         "production": [

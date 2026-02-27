@@ -12,12 +12,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
-// import store from './store';
+import store from './store';
 import './styles/global.css';
-
-// Import global styles and utilities
-// import '@styles/variables.css';
-import '@styles/normalize.css';
+// import './styles/normalize.css';
 
 /**
  * Main Application Component with all providers

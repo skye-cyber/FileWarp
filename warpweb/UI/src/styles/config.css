@@ -1,6 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Your custom theme configuration */
+@theme {
+    /* Screens/breakpoints */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Font families */
+    --font-display: "Source Serif Pro", Georgia, serif;
+    --font-body: "Synonym", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+
+    /* Custom colors */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+
+    /* Font sizes */
+    --text-h1: 36px;
+    --text-h2: 2rem;
+    --text-h3: 1.75rem;
+    --text-h4: 1.5rem;
+    --text-h5: 1.25rem;
+    --text-h6: 1rem;
+
+    /* Font weights */
+    --font-weight-h1: 700;
+    --font-weight-h2: 600;
+    --font-weight-h3: 500;
+    --font-weight-h4: 400;
+    --font-weight-h5: 300;
+    --font-weight-h6: 200;
+
+    /* Z-index values */
+    --z-index-1: 1;
+    --z-index-5: 5;
+    --z-index-10: 10;
+    --z-index-15: 15;
+    --z-index-20: 20;
+    --z-index-25: 25;
+    --z-index-30: 30;
+    --z-index-35: 35;
+    --z-index-40: 40;
+    --z-index-41: 41;
+    --z-index-45: 45;
+    --z-index-51: 51;
+    --z-index-55: 55;
+    --z-index-60: 60;
+    --z-index-65: 65;
+    --z-index-70: 70;
+    --z-index-75: 75;
+    --z-index-80: 80;
+    --z-index-85: 85;
+    --z-index-90: 90;
+    --z-index-95: 95;
+    --z-index-100: 100;
+
+    /* Animations */
+    --animate-bounce: bounce 0.5s infinite;
+    --animate-bounce-100: bounce 0.5s 100ms infinite;
+    --animate-bounce-200: bounce 0.5s 200ms infinite;
+    --animate-bounce-300: bounce 0.5s 300ms infinite;
+    --animate-bounce-400: bounce 0.5s 400ms infinite;
+    --animate-bounce-500: bounce 0.5s 500ms infinite;
+    --animate-bounce-600: bounce 0.5s 600ms infinite;
+    --animate-heartpulse: heartpulse 1s infinite;
+    --animate-spin-50: spin 0.5s linear infinite;
+    --animate-reload-100: spin 1s linear infinite;
+    --animate-spin-200: spin 2s linear infinite;
+    --animate-fadeIn: fadeIn 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-300px); }
+    10% { opacity: 0.1; }
+    20% { opacity: 0.2; }
+    30% { opacity: 0.3; }
+    40% { opacity: 0.4; }
+    50% { opacity: 0.5; transform: translateY(-150px); }
+    60% { opacity: 0.6; }
+    70% { opacity: 0.7; }
+    80% { opacity: 0.8; }
+    90% { opacity: 0.9; }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes heartpulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Dark mode is handled via the class strategy */
 
 html{
     scroll-behavior: smooth;
@@ -16,7 +129,9 @@ html{
     }
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
 
 .pulse {
     display: inline-block;
@@ -270,19 +385,4 @@ html{
 }
 .bar:nth-child(10) {
     animation-delay: 0.9s;
-}
-
-@media print {
-    /* Force all MUI icons to be white */
-    .MuiSvgIcon-root,
-    .MuiChip-icon,
-    .MuiChip-icon svg {
-        color: white !important;
-        fill: white !important;
-        stroke: white !important;
-    }
-    body {
-        margin: 4 !important;
-        padding: 2 !important;
-    }
 }

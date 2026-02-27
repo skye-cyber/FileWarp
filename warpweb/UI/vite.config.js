@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 // import { visualizer } from 'rollup-plugin-visualizer'
+import tailwindcss from '@tailwindcss/vite'
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,6 +11,7 @@ export default defineConfig({
         react(),
         // Uncomment for bundle analysis
         // visualizer({ open: true })
+        tailwindcss(),
     ],
 
     resolve: {
@@ -19,9 +22,9 @@ export default defineConfig({
             '@styles': path.resolve(__dirname, './src/styles'),
             '@utils': path.resolve(__dirname, './src/utils'),
             '@hooks': path.resolve(__dirname, './src/hooks'),
-            '@contexts': path.resolve(__dirname, './src/contexts'),
-            '@templates': path.resolve(__dirname, './src/templates'),
-            '@schema': path.resolve(__dirname, './schema')
+            // '@contexts': path.resolve(__dirname, './src/contexts'),
+            // '@templates': path.resolve(__dirname, './src/templates'),
+            // '@schema': path.resolve(__dirname, './schema')
         }
     },
 

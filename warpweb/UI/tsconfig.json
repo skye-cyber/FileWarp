@@ -9,7 +9,7 @@
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
-    "noEmit": true,          // Let Vite emit, tsc just checks
+    "skipLibCheck": true,
+    "noEmit": true          // Let Vite emit, tsc just checks
   }
 }

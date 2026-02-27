@@ -10,12 +10,15 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Snackbar, Alert, useTheme } from '@mui/material';
 import MainLayout from './components/layouts/MainLayout';
-// import WelcomeScreen from './pages/WelcomeScreen';
+import WelcomeScreen from './pages/WelcomeScreen';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import { setWarp, setLoading, setError, setSuccess, clearError } from './store/warpSlice';
+import { Dashboard } from './components/Dashboard/Dashboard';
+import { Converter } from './components/Converter/Converter';
 // import { useElectron } from './hooks/useElectron';
 // import { useFileSystem } from './hooks/useFileSystem';
 // import { useHotkeys } from './hooks/useHotkeys';
@@ -24,9 +27,11 @@ import ErrorBoundary from './components/common/ErrorBoundary';
  * Main Application Component
  */
 const App = () => {
-    //     const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const theme = useTheme();
+
+    const { warpdata, loading, error, successMessage } = useSelector((state) => state.warpdata);
     const [showWelcome, setShowWelcome] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -36,7 +41,7 @@ const App = () => {
     useEffect(() => {
         console.log('Initializing Warp Vite project...');
         // Check if we should show welcome screen
-        // checkWelcomeScreen();
+        checkWelcomeScreen();
         setIsInitialized(true)
         return () => {
             // Cleanup on unmount
@@ -92,7 +97,7 @@ const App = () => {
     }, [dispatch]);
 
     // Set up hotkeys
-    useHotkeys({
+    // useHotkeys({
         //         'Ctrl+N, Meta+N': (e) => {
         //             e.preventDefault();
         //             handleNewResume();
@@ -109,7 +114,7 @@ const App = () => {
         //             e.preventDefault();
         //             handleExport('pdf');
         //         }
-    });
+    //});
 
     /**
      * Render loading state
@@ -123,7 +128,7 @@ const App = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '100vh',
-                    backgroundColor: 'lightblue' //theme.palette.background.default
+                    backgroundColor: theme.palette.background.default
                 }}
             >
                 <CircularProgress
@@ -140,26 +145,27 @@ const App = () => {
      */
     return (
         <ErrorBoundary>
-            <Routes>
-                <Route
-                    path="/welcome"
-                    element={<WelcomeScreen onGetStarted={handleWelcomeComplete} onOpenResume={handleOpenResume} />}
-                />
-                <Route
-                    path="/dashboard"
-                    element={<MainLayout />}
-                />
-                <Route
-                    path="/editor"
-                    element={<MainLayout />}
-                />
-                <Route
-                    path="/"
-                    element={showWelcome ?
-                        <Navigate to="/welcome" replace /> :
-                        <Navigate to="/dashboard" replace />}
-                />
-            </Routes>
+            <MainLayout>
+                <Routes>
+                    <Route
+                        path="/welcome"
+                        element={<WelcomeScreen onGetStarted={handleWelcomeComplete} />}
+                    />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/converter" element={<Converter />} />
+                    <Route path="/document" element={<Converter />} />
+                    <Route path="/video" element={<Converter />} />
+                    <Route path="/audio" element={<Converter />} />\
+                    <Route path="/image" element={<Converter />} />
+                    <Route path="/batch" element={<Converter />} />
+                    <Route
+                        path="/"
+                        element={showWelcome ?
+                            <Navigate to="/welcome" replace /> :
+                            <Navigate to="/dashboard" replace />}
+                    />
+                </Routes>
+            </MainLayout>
 
             {/* Loading indicator */}
             {loading && (
