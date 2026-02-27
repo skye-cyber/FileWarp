@@ -13,15 +13,15 @@ import { loadState, saveState } from '../utils/localStorage';
  */
 export const store = configureStore({
     reducer: {
-        warpdata: warpReducer,
+        warp: warpReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
                 // Ignore specific action types that might have non-serializable data
-                ignoredActions: ['warp/setWarpdata', 'warp/updateWarpData'],
+                //ignoredActions: ['warp/setWarpdata', 'warp/updateWarpData'],
                 // Ignore specific paths in the state
-                ignoredPaths: ['warp.data.metadata.created', 'warp.data.metadata.lastUpdated'],
+                //ignoredPaths: ['warp.data.metadata.created', 'warp.data.metadata.lastUpdated'],
             },
         }),
     devTools: import.meta.env.DEV || process.env.NODE_ENV !== 'production',

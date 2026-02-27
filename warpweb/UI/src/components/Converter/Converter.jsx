@@ -1,21 +1,25 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { AvailableTools } from "../Tools/schema";
-import { useNavigate } from "react-router-dom";
+import { AvailableTools, getToolsByCategory } from "../Tools/schema";
 import { setActiveTab, setActiveTool } from "../../store/warpSlice";
+import { toTitleCase } from "../../utils/extendJS";
+import { useNavigate } from "react-router-dom";
 
-export const Converter = ({ }) => {
+export const Converter = ({ category = 'documents' }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { activeTool, ui } = useSelector((state) => state.warpdata);
+    const { activeTool, ui } = useSelector((state) => state.warp);
+    const [Tools, setTools] = React.useState(null)
 
-    const [ToolCategory, setToolCategory] = useState(activeTool.category || 'document');
-    const [Tool, setTool] = useState(null)
+    React.useEffect(() => {
+        if (ui.activeTab === 'dashboard') return navigate('/dashboard');
 
-    const ToolSwitch = useCallback((tool) => {
+        const tools = getToolsByCategory(ui.activeTab);
+        setTools(tools);
+    }, [ui.activeTab, navigate, getToolsByCategory]);
+
+    const ToolSwitch = React.useCallback((tool) => {
         console.log("Switch tool:", tool)
-        setToolCategory(tool.name)
-        setTool(tool)
         dispatch(setActiveTab(tool.category))
         dispatch(setActiveTool(tool))
 
@@ -31,10 +35,11 @@ export const Converter = ({ }) => {
     }
 
     const ToolButton = ({ tool }) => {
+        if (!tool) return
         return (
             <button
                 onClick={() => ToolSwitch(tool.id)}
-                className="tool-nav w-full text-left p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors tool-{{ tool.id }}"
+                className={`tool-nav w-full text-left p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors tool-${tool.id}`}
             >
                 <div className="flex items-center justify-between">
                     <span className="font-medium text-gray-700 dark:text-gray-300"
@@ -54,7 +59,7 @@ export const Converter = ({ }) => {
             {/* Category Header */}
             <div className="mb-8" data-aos="fade-up">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    {ToolCategory || Tool.name} Tools
+                    {toTitleCase(activeTool.category)} Tools
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">Select a tool to get started</p>
             </div>
@@ -71,9 +76,11 @@ export const Converter = ({ }) => {
                             Available Tools
                         </h3>
                         <div className="space-y-2">
-                            {AvailableTools.map((key, tool) => {
-                                return <ToolButton key={key} tool={tool} />
-                            })}
+                            {Tools &&
+                                Object.keys(Tools).map((toolkey, key) => {
+                                    // console.log(toolkey, AvailableTools[toolkey])
+                                    return <ToolButton key={key} tool={AvailableTools[toolkey]} />
+                                })}
                         </div>
                     </div>
                 </div>
@@ -84,8 +91,8 @@ export const Converter = ({ }) => {
                         id="tool-interface"
                         className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6"
                     >
-                        {Tool ?
-                            <Tool.component />
+                        {activeTool && activeTool.component ?
+                            <activeTool.component />
                             :
                             <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                                 <span className="flex justify-center mb-4">

@@ -14,7 +14,7 @@ const initialState = {
     loading: false,
     error: null,
     successMessage: null,
-    activeTool: {category: 'document', id: 1, name: 'convert_doc'},
+    activeTool: {category: 'dashboard', id: 1, name: 'Dashboard'},
     ui: {
         activeTab: 'dashboard',
         panelWidth: 350,

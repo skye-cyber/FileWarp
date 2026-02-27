@@ -14,8 +14,8 @@ export const saveState = (state) => {
         localStorage.setItem('warpstate', serializedState);
 
         // Also save just the resume data separately for easy access
-        if (state.warpdata) {
-            const serializedWarpdata = JSON.stringify(state.warpdata);
+        if (state.warp) {
+            const serializedWarpdata = JSON.stringify(state.warp);
             localStorage.setItem('warpstate', serializedWarpdata);
         }
     } catch (err) {
@@ -45,8 +45,8 @@ export const loadState = () => {
  */
 export const clearState = () => {
     try {
-        localStorage.removeItem('rstudio-state');
-        localStorage.removeItem('rstudio-resume');
+        localStorage.removeItem('warpstate');
+        localStorage.removeItem('warpstate');
     } catch (err) {
         console.error('Could not clear state from localStorage:', err);
     }
@@ -56,9 +56,9 @@ export const clearState = () => {
  * Save warpdata to localStorage
  * @param {Object} resume - The resume data to save
  */
-export const saveResume = (resume) => {
+export const saveWarpdata = (warpdata) => {
     try {
-        const serializedWarpdata = JSON.stringify(resume);
+        const serializedWarpdata = JSON.stringify(warpdata);
         localStorage.setItem('warpdata', serializedWarpdata);
         localStorage.setItem('warpdata-last-save', new Date().toISOString());
     } catch (err) {
@@ -70,7 +70,7 @@ export const saveResume = (resume) => {
  * Load warpdata from localStorage
  * @returns {Object|null} The loaded resume or null if failed
  */
-export const loadResume = () => {
+export const loadWarpdata = () => {
     try {
         const serializedWarpdata = localStorage.getItem('warpdata');
         if (serializedWarpdata === null) {

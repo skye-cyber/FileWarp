@@ -31,7 +31,7 @@ const App = () => {
     const navigate = useNavigate();
     const theme = useTheme();
 
-    const { warpdata, loading, error, successMessage } = useSelector((state) => state.warpdata);
+    const { warpdata, loading, error, successMessage } = useSelector((state) => state.warp);
     const [showWelcome, setShowWelcome] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -98,22 +98,22 @@ const App = () => {
 
     // Set up hotkeys
     // useHotkeys({
-        //         'Ctrl+N, Meta+N': (e) => {
-        //             e.preventDefault();
-        //             handleNewResume();
-        //         },
-        //         'Ctrl+O, Meta+O': (e) => {
-        //             e.preventDefault();
-        //             handleOpenResume();
-        //         },
-        //         'Ctrl+S, Meta+S': (e) => {
-        //             e.preventDefault();
-        //             handleSaveResume();
-        //         },
-        //         'Ctrl+E, Meta+E': (e) => {
-        //             e.preventDefault();
-        //             handleExport('pdf');
-        //         }
+    //         'Ctrl+N, Meta+N': (e) => {
+    //             e.preventDefault();
+    //             handleNewResume();
+    //         },
+    //         'Ctrl+O, Meta+O': (e) => {
+    //             e.preventDefault();
+    //             handleOpenResume();
+    //         },
+    //         'Ctrl+S, Meta+S': (e) => {
+    //             e.preventDefault();
+    //             handleSaveResume();
+    //         },
+    //         'Ctrl+E, Meta+E': (e) => {
+    //             e.preventDefault();
+    //             handleExport('pdf');
+    //         }
     //});
 
     /**
@@ -152,12 +152,11 @@ const App = () => {
                         element={<WelcomeScreen onGetStarted={handleWelcomeComplete} />}
                     />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/converter" element={<Converter />} />
-                    <Route path="/document" element={<Converter />} />
-                    <Route path="/video" element={<Converter />} />
-                    <Route path="/audio" element={<Converter />} />\
-                    <Route path="/image" element={<Converter />} />
-                    <Route path="/batch" element={<Converter />} />
+                    <Route path="/documents" element={<Converter />} category='documents' />
+                    <Route path="/videos" element={<Converter category='videos' />} />
+                    <Route path="/audios" element={<Converter category='audios' />} />\
+                    <Route path="/images" element={<Converter />} category='images' />
+                    <Route path="/batch" element={<Converter />} category='batch' />
                     <Route
                         path="/"
                         element={showWelcome ?

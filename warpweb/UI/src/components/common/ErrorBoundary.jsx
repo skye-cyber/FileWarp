@@ -67,7 +67,7 @@ class ErrorBoundary extends Component {
                         </Typography>
 
                         <Typography variant="body1" paragraph sx={{ mt: 2, mb: 3 }}>
-                            We encountered an unexpected error while running RStudio.
+                            We encountered an unexpected error while running FileWarp.
                             Don't worry, your data is safe.
                         </Typography>
 

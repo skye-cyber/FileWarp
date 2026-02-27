@@ -70,7 +70,7 @@ export const createWarpdataBackup = (data) => {
  * @returns {Object} Restored Warpdata
  */
 export const restoreFromBackup = (backup) => {
-    if (!backup || !backup.arpdata) {
+    if (!backup || !backup.warpdata) {
         throw new Error('Invalid backup format');
     }
 

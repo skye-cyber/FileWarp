@@ -20,7 +20,7 @@ import { TopNavBar } from '../Navigation/TopNav';
  */
 const MainLayout = ({ children }) => {
     const theme = useTheme();
-    const { warpdata } = useSelector((state) => state.warpdata);
+//     const { warpdata } = useSelector((state) => state.warp);
     const [LeftDrawerOpen, setLeftDrawerOpen] = React.useState(false);
 
     const [EditorPanelWidth, setEditorPanelWidth] = React.useState(400);
@@ -108,7 +108,7 @@ const MainLayout = ({ children }) => {
             <TopNavBar />
 
             {/* Main Content Area */}
-            <div className='w-full h-full bg-blue-600 overflow-auto'>
+            <div className='w-full h-full overflow-auto'>
                 {children}
             </div>
 

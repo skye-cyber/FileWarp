@@ -1,27 +1,41 @@
 import React from "react";
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { countCategoryTools, getToolFromCategory, getToolsByCategory } from "../Tools/schema";
+import { setActiveTab, setActiveTool } from "../../store/warpSlice";
+import { useDispatch } from "react-redux";
 
 export const Dashboard = ({ }) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
+    const handleNavigate = (path, tool_id) => {
+        try {
+            const norm_path = path.replace('/', '')
+            dispatch(setActiveTab(norm_path))
+            dispatch(setActiveTool(getToolFromCategory(norm_path, tool_id)))
+            navigate(path)
+        } catch(err) {
+            console.log(err)
+        }
+    }
     return (
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             {/* Hero Section */}
-            <div className="gradient-bg rounded-2xl p-8 text-white mb-8" data-aos="fade-up">
+            <div className="gradient-bg rounded-2xl p-8 text-white mb-8 hidden" data-aos="fade-up">
                 <div className="max-w-3xl">
                     <h1 className="text-4xl font-bold mb-4">File Management Suite</h1>
                     <p className="text-xl opacity-90 mb-6">Convert, analyze, and process your files with powerful tools</p>
                     <div className="flex flex-wrap gap-4">
-                        <button onClick={() => navigate('/document')} className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex gap-2 items-center">
+                        <button onClick={() => handleNavigate('/document')} className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex gap-2 items-center">
                             <svg className="fill-blue-600 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M128 64C92.7 64 64 92.7 64 128L64 512C64 547.3 92.7 576 128 576L208 576L208 464C208 428.7 236.7 400 272 400L448 400L448 234.5C448 217.5 441.3 201.2 429.3 189.2L322.7 82.7C310.7 70.7 294.5 64 277.5 64L128 64zM389.5 240L296 240C282.7 240 272 229.3 272 216L272 122.5L389.5 240zM272 444C261 444 252 453 252 464L252 592C252 603 261 612 272 612C283 612 292 603 292 592L292 564L304 564C337.1 564 364 537.1 364 504C364 470.9 337.1 444 304 444L272 444zM304 524L292 524L292 484L304 484C315 484 324 493 324 504C324 515 315 524 304 524zM400 444C389 444 380 453 380 464L380 592C380 603 389 612 400 612L432 612C460.7 612 484 588.7 484 560L484 496C484 467.3 460.7 444 432 444L400 444zM420 572L420 484L432 484C438.6 484 444 489.4 444 496L444 560C444 566.6 438.6 572 432 572L420 572zM508 464L508 592C508 603 517 612 528 612C539 612 548 603 548 592L548 548L576 548C587 548 596 539 596 528C596 517 587 508 576 508L548 508L548 484L576 484C587 484 596 475 596 464C596 453 587 444 576 444L528 444C517 444 508 453 508 464z" /></svg>Document Tools
                         </button>
-                        <buton onClick={() => navigate('/audio')} className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors flex gap-2 items-center">
+                        <button onClick={() => handleNavigate('/audio')} className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors flex gap-2 items-center">
                             <svg className="fill-green-600 w-6 h-6 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M532 71C539.6 77.1 544 86.3 544 96L544 400C544 444.2 501 480 448 480C395 480 352 444.2 352 400C352 355.8 395 320 448 320C459.2 320 470 321.6 480 324.6L480 207.9L256 257.7L256 464C256 508.2 213 544 160 544C107 544 64 508.2 64 464C64 419.8 107 384 160 384C171.2 384 182 385.6 192 388.6L192 160C192 145 202.4 132 217.1 128.8L505.1 64.8C514.6 62.7 524.5 65 532.1 71.1z" /></svg>Audio Tools
-                        </buton>
-                        <button onClick={() => navigate('/video')} className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors flex gap-2 items-center">
+                        </button>
+                        <button onClick={() => handleNavigate('/video')} className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors flex gap-2 items-center">
                             <svg className="fill-purple-600 w-6 h-6 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M128 128C92.7 128 64 156.7 64 192L64 448C64 483.3 92.7 512 128 512L384 512C419.3 512 448 483.3 448 448L448 192C448 156.7 419.3 128 384 128L128 128zM496 400L569.5 458.8C573.7 462.2 578.9 464 584.3 464C597.4 464 608 453.4 608 440.3L608 199.7C608 186.6 597.4 176 584.3 176C578.9 176 573.7 177.8 569.5 181.2L496 240L496 400z" /></svg>Video Tools
                         </button>
-                        <button onClick={() => navigate('/Image')} className="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors flex gap-2 items-center">
+                        <button onClick={() => handleNavigate('/Image')} className="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors flex gap-2 items-center">
                             <svg className="fill-red-600 w-6 h-6 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M128 160C128 124.7 156.7 96 192 96L512 96C547.3 96 576 124.7 576 160L576 416C576 451.3 547.3 480 512 480L192 480C156.7 480 128 451.3 128 416L128 160zM56 192C69.3 192 80 202.7 80 216L80 512C80 520.8 87.2 528 96 528L456 528C469.3 528 480 538.7 480 552C480 565.3 469.3 576 456 576L96 576C60.7 576 32 547.3 32 512L32 216C32 202.7 42.7 192 56 192zM224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160C206.3 160 192 174.3 192 192C192 209.7 206.3 224 224 224zM420.5 235.5C416.1 228.4 408.4 224 400 224C391.6 224 383.9 228.4 379.5 235.5L323.2 327.6L298.7 297C294.1 291.3 287.3 288 280 288C272.7 288 265.8 291.3 261.3 297L197.3 377C191.5 384.2 190.4 394.1 194.4 402.4C198.4 410.7 206.8 416 216 416L488 416C496.7 416 504.7 411.3 508.9 403.7C513.1 396.1 513 386.9 508.4 379.4L420.4 235.4z" /></svg>Image Tools
                         </button>
                     </div>
@@ -37,7 +51,7 @@ export const Dashboard = ({ }) => {
                         </div>
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Document Tools</p>
-                            <p className="text-2xl font-bold text-gray-900 dark:text-white">8</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">{countCategoryTools('documents')}</p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +63,7 @@ export const Dashboard = ({ }) => {
                         </div>
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Audio Tools</p>
-                            <p className="text-2xl font-bold text-gray-900 dark:text-white">6</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">{countCategoryTools('audios')}</p>
                         </div>
                     </div>
                 </div>
@@ -61,7 +75,7 @@ export const Dashboard = ({ }) => {
                         </div>
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Video Tools</p>
-                            <p className="text-2xl font-bold text-gray-900 dark:text-white">4</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">{countCategoryTools('videos')}</p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +87,7 @@ export const Dashboard = ({ }) => {
                         </div>
                         <div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Image Tools</p>
-                            <p className="text-2xl font-bold text-gray-900 dark:text-white">10</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">{countCategoryTools('images')}</p>
                         </div>
                     </div>
                 </div>
@@ -87,18 +101,18 @@ export const Dashboard = ({ }) => {
                         <svg className="fill-blue-500 w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M128 64C92.7 64 64 92.7 64 128L64 512C64 547.3 92.7 576 128 576L208 576L208 464C208 428.7 236.7 400 272 400L448 400L448 234.5C448 217.5 441.3 201.2 429.3 189.2L322.7 82.7C310.7 70.7 294.5 64 277.5 64L128 64zM389.5 240L296 240C282.7 240 272 229.3 272 216L272 122.5L389.5 240zM272 444C261 444 252 453 252 464L252 592C252 603 261 612 272 612C283 612 292 603 292 592L292 564L304 564C337.1 564 364 537.1 364 504C364 470.9 337.1 444 304 444L272 444zM304 524L292 524L292 484L304 484C315 484 324 493 324 504C324 515 315 524 304 524zM400 444C389 444 380 453 380 464L380 592C380 603 389 612 400 612L432 612C460.7 612 484 588.7 484 560L484 496C484 467.3 460.7 444 432 444L400 444zM420 572L420 484L432 484C438.6 484 444 489.4 444 496L444 560C444 566.6 438.6 572 432 572L420 572zM508 464L508 592C508 603 517 612 528 612C539 612 548 603 548 592L548 548L576 548C587 548 596 539 596 528C596 517 587 508 576 508L548 508L548 484L576 484C587 484 596 475 596 464C596 453 587 444 576 444L528 444C517 444 508 453 508 464z" /></svg>Document Tools
                     </h3>
                     <div className="space-y-3">
-                        <a href="{% url 'core:category_tools' 'document' %}?tool=convert_doc" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <button onClick={() => handleNavigate('/documents', 'convert_doc')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium">Document Conversion</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
-                        <a href="{% url 'core:category_tools' 'document' %}?tool=pdf_join" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        </button>
+                        <button onClick={() => handleNavigate('/documents', 'pdf_join')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium">PDF Joining</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
-                        <a href="{% url 'core:category_tools' 'document' %}?tool=scan_pdf" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        </button>
+                        <button onClick={() => handleNavigate('/documents', 'scan_pdf')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium">PDF Text Extraction</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
 
@@ -108,22 +122,22 @@ export const Dashboard = ({ }) => {
                         <svg className="fill-purple-500 w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM252.3 211.1C244.7 215.3 240 223.4 240 232L240 408C240 416.7 244.7 424.7 252.3 428.9C259.9 433.1 269.1 433 276.6 428.4L420.6 340.4C427.7 336 432.1 328.3 432.1 319.9C432.1 311.5 427.7 303.8 420.6 299.4L276.6 211.4C269.2 206.9 259.9 206.7 252.3 210.9z" /></svg>Media Tools
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
-                        <a href="{% url 'core:category_tools' 'audio' %}?tool=audio_join" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <button onClick={() => handleNavigate('/audios', 'audio_join')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium text-sm">Audio Join</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
-                        <a href="{% url 'core:category_tools' 'video' %}?tool=extract_audio" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        </button>
+                        <button onClick={() => handleNavigate('/videos', 'extract_audio')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium text-sm">Audio Extract</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
-                        <a href="{% url 'core:category_tools' 'image' %}?tool=image2pdf" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        </button>
+                        <button onClick={() => handleNavigate('/images', 'image2pdf')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium text-sm">Image to PDF</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
-                        <a href="{% url 'core:category_tools' 'image' %}?tool=ocr" className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        </button>
+                        <button onClick={() => handleNavigate('/images', 'ocr')} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                             <span className="font-medium text-sm">OCR</span>
                             <svg className="w-5 h-5 fill-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3C348.8 149.8 348.8 170.1 361.3 182.6L466.7 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L466.7 352L361.3 457.4C348.8 469.9 348.8 490.2 361.3 502.7C373.8 515.2 394.1 515.2 406.6 502.7L566.6 342.7z" /></svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

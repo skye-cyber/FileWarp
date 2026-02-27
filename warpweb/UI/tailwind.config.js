@@ -22,21 +22,6 @@ module.exports = {
             body: ["Synonym", "system-ui", "sans-serif"],
             mono: ["JetBrains Mono", "monospace"], // Adding JetBrains Mono for monospaced text
         },
-        safelist: [
-          "bg-blue-600",
-            {
-                pattern: /^bg-(primary|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(\d{2,3})$/,
-                variants: ['hover', 'focus', 'active', 'disabled', 'dark'],
-            },
-            {
-                pattern: /^text-(primary|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(\d{2,3})$/,
-                variants: ['hover', 'focus', 'active', 'disabled', 'dark'],
-            },
-            {
-                pattern: /^border-(primary|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(\d{2,3})$/,
-                variants: ['hover', 'focus', 'active', 'disabled', 'dark'],
-            },
-        ],
         extend: {
             colors: {
                 primary: {
@@ -141,5 +126,8 @@ module.exports = {
              *        'gradient-secondary': '#00ffcc',
           },*/
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('@tailwindcss/typography'),
+    ],
 };
