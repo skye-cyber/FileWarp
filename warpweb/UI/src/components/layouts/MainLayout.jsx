@@ -13,7 +13,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Drawer, Divider, useTheme, Typography, Button, Chip, Grid } from '@mui/material';
 import { Save, Add, PictureAsPdf, Description, Code, ContentCopy, Refresh, Palette } from '@mui/icons-material';
-import { TopNavBar } from '../Navigation/TopNav';
+import { NavbarTop } from '../Navigation/NavbarTop';
 
 /**
  * Main Layout Component
@@ -103,9 +103,9 @@ const MainLayout = ({ children }) => {
     }, [isDraggingEditor, isDraggingRight]);
 
     return (
-        <div ref={containerRef} className='block w-screen h-screen'>
+        <div ref={containerRef} className='block w-screen h-screen bg-white dark:bg-blend-900 transition-color duration-500'>
             {/* Top NavBar */}
-            <TopNavBar />
+            <NavbarTop />
 
             {/* Main Content Area */}
             <div className='w-full h-full overflow-auto'>

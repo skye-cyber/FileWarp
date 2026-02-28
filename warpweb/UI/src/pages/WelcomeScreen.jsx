@@ -10,7 +10,7 @@
 import React from 'react';
 import { Box, Typography, Button, Paper, Grid } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
-
+import { useTheme } from '@emotion/react';
 /**
  * Welcome Screen Component
  * @param {Object} props - Component props
@@ -18,6 +18,7 @@ import { AddCircleOutline } from '@mui/icons-material';
  * @param {Function} props.onOpenResume - Callback for open resume action
  */
 const WelcomeScreen = ({ onGetStarted }) => {
+    const theme = useTheme();
     return (
         <Box
             sx={{
@@ -74,7 +75,7 @@ const WelcomeScreen = ({ onGetStarted }) => {
 
                 <Box mt={4} pt={2} borderTop="1px solid #eee">
                     <Typography variant="body2" color="text.secondary">
-                        Need help? Check out our <a href="#" style={{ color: 'inherit' }}>documentation</a>
+                        Need help? Check out our <a href="#" className='hover:underline' style={{ color: theme.palette.primary.main }}>documentation</a>
                     </Typography>
                 </Box>
             </Paper>
