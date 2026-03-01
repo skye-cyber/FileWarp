@@ -30,7 +30,7 @@ sri()
 dos_req()
 
 setup(
-    name="filemac",
+    name="filewarp",
     author="wambua",
     author_email="swskye17@gmail.com",
     version=open(os.path.abspath("version.txt")).read(),
@@ -41,10 +41,10 @@ setup(
     url="https://pypi.org/project/filemac/",
     entry_points={
         "console_scripts": [
-            "filemac=filemac:argsdev",
-            "Filemac=filemac:argsdev",
-            "FILEMAC=filemac:argsdev",
-            "audiobot=filemac:audiobot",
+            "filewarp=warp:main",
+            "warp=warp:main",
+            "Filewarp=warp:main",
+            "audiobot=warp:audiobot",
         ],
     },
     python_requires=">=3.8",
@@ -86,7 +86,6 @@ setup(
         "pynput",
         "pyaudio",
         "cairosvg",
-        "frontend",
     ],
     include_package_data=True,
     zip_safe=False,

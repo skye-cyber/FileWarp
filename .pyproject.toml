@@ -70,7 +70,6 @@ dependencies = [
     "imageio",
     "pynput",
     "pyaudio",
-    "frontend",
 ]
 
 [project.urls]

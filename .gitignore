@@ -9,7 +9,8 @@ __pycache__/
 *.py[cod]
 
 # Ignore temporary files
-*.egg-info
+*~
+filemac.egg-info/**
 # Ignore build directories
 **/build/
 **/dist/
@@ -23,6 +24,8 @@ __pycache__/
 # Ignore operating system files
 .DS_Store
 Thumbs.db
+*.db
+*.sqlite*
 
 # Ignore log files
 *.log
@@ -35,5 +38,3 @@ env/
 venv/
 *.docx
 *.doc
-*~
-*.db

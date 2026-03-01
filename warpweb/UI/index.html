@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WarpWeb - File kit web UI</title>
+    <meta name="description" content="Professional offline-first resume builder" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      /* Global loading styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      #root {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+
+      /* Loading spinner */
+      .loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(25, 118, 210, 0.3);
+        border-radius: 50%;
+        border-top-color: #1976d2;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+
+      /* Hide until JS loads */
+      .no-js-message {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        color: #333;
+        padding: 20px;
+        text-align: center;
+        font-family: sans-serif;
+        z-index: 9999;
+      }
+
+      .no-js-message.show {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .no-js-message h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .no-js-message p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        max-width: 500px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div class="no-js-message show">
+        <h1>Warp requires JavaScript</h1>
+        <p>This project requires JavaScript to run properly. Please enable JavaScript in your browser settings and reload the page.</p>
+      </div>
+    </noscript>
+
+    <div id="root">
+      <!-- React app will be mounted here -->
+      <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+      // Remove no-JS message when JS loads
+      document.addEventListener('DOMContentLoaded', function() {
+        const noJsMessage = document.querySelector('.no-js-message');
+        if (noJsMessage) {
+          noJsMessage.classList.remove('show');
+        }
+      });
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

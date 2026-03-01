@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",      // Vite prefers over CommonJS
+    "jsx": "react-jsx",      // Critical for React
+    "moduleResolution": "bundler",  // Vite 5+ optimized
+    "allowImportingTsExtensions": true,
+    //"outDir": "./electron",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true          // Let Vite emit, tsc just checks
+  }
+}
