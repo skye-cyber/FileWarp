@@ -8,7 +8,6 @@ from ..core.pdf.core import PageExtractor
 from ..core.exceptions import FileSystemError, FilemacError
 from pathlib import Path
 from ..utils.colors import fg, bg, rs
-
 from ..utils.simple import logger
 
 try:
