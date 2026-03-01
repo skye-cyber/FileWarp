@@ -55,7 +55,7 @@ export const NavbarTop = ({ }) => {
     }
 
     return (
-        <nav className="sticky top-0 left-0 w-full z-[10] bg-white dark:bg-gray-900 shadow-lg border-b border-gray-700 sticky top-0 z-50 shadow-balanced-xl">
+        <nav className="sticky top-0 left-0 w-full z-[10] bg-white dark:bg-gray-900 shadow-lg border-b dark:border-gray-700 sticky top-0 z-50 shadow-balanced-xl">
             <CollapsiblePanel onNavigate={handleNavigate} panelref={PanelRef} onclose={ClosenavPanel} />
             <div className="relative max-w-7xl mx-auto px-4">
                 <Hambuger onclick={() => TogglePanel()} className="block md:hidden absolute top-6 left-1 z-5 cursor-pointer" />

@@ -54,12 +54,12 @@
     }
 
     .scrollbar-custom{
-        scrollbar-width: thin;
+        scrollbar-width: 2px;
         scrollbar-color: #c1c1c1 transparent;
     }
 
     .dark .scrollbar-custom{
-        scrollbar-color: #4a4a6a transparent;
+        scrollbar-color: #5b5b82 transparent;
     }
 
     /* Optional: Add transitions for more natural feel */

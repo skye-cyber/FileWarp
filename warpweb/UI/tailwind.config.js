@@ -237,19 +237,19 @@ module.exports = {
     plugins: [
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
-        // require('tailwindcss-pseudo-elements')({
-        //     // optional customization
-        //     customPseudoClasses: [],
-        //     customPseudoElements: ['before', 'after'],
-        //     contentUtilities: true,
-        //     emptyContent: true
-        // }),
+        require('tailwindcss-pseudo-elements')({
+            // optional customization
+            customPseudoClasses: [],
+            customPseudoElements: ['before', 'after'],
+            contentUtilities: true,
+            emptyContent: true
+        }),
     ],
     variants: {
-        // extend: {
-        //     // enable the variants
-        //     backgroundColor: ['before', 'after', 'hover::before', 'last-child'],
-        //     textColor: ['before', 'after'],
-        // },
+        extend: {
+            // enable the variants
+            backgroundColor: ['before', 'after', 'hover::before', 'last-child'],
+            textColor: ['before', 'after'],
+        },
     }
 };

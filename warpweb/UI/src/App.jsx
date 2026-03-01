@@ -19,7 +19,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { setWarp, setLoading, setError, setSuccess, clearError } from './store/warpSlice';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { Converter } from './components/Converter/Converter';
-// import AOS from 'aos';
+import AOS from 'aos';
 // import 'aos/dist/aos.css';
 // import { useElectron } from './hooks/useElectron';
 // import { useFileSystem } from './hooks/useFileSystem';
@@ -45,15 +45,15 @@ const App = () => {
         // Check if we should show welcome screen
         checkWelcomeScreen();
         setIsInitialized(true)
-        // AOS.init({
-        //     once: false,
-        //     mirror: true,
-        //     duration: 700,
-        //     startEvent: 'DOMContentLoaded',
-        // });
-        // setTimeout(() => {
-        //     AOS.refresh();
-        // }, 300);
+        AOS.init({
+            once: false,
+            mirror: true,
+            duration: 700,
+            startEvent: 'DOMContentLoaded',
+        });
+        setTimeout(() => {
+            AOS.refresh();
+        }, 300);
         return () => {
             // Cleanup on unmount
             console.log('Cleaning up Warp');

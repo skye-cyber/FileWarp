@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AvailableTools, getToolsByCategory } from "../Tools/schema";
 import { setActiveTab, setActiveTool } from "../../store/warpSlice";
 import { toTitleCase } from "../../utils/extendJS";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, MargicTool } from "../svg/core";
-import { ChevronLeft } from "@mui/icons-material";
+import { AppBlocking, ChevronLeft, DensityLarge, DensityMedium, ListAlt, MenuBook, MenuOpen, MenuOpenOutlined, MoreHoriz, MoreVert, MoreVertOutlined, Reorder } from "@mui/icons-material";
+import { AppBar } from "@mui/material";
 
 export const Converter = ({ category = 'documents' }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { activeTool, ui } = useSelector((state) => state.warp);
     const [Tools, setTools] = React.useState(null)
+    const availableToolRef = useRef()
 
     React.useEffect(() => {
         if (ui.activeTab === 'dashboard') return navigate('/dashboard');
@@ -36,20 +38,36 @@ export const Converter = ({ category = 'documents' }) => {
         // ...
     }
 
+    const openTools = () => {
+        availableToolRef.current.classList.remove('hidden')
+    }
+
+    const closeTools = () => {
+        availableToolRef.current.classList.add('hidden')
+    }
+
+    const toggleTools = () => {
+        if (availableToolRef.current.classList.contains('hidden')) {
+            openTools()
+        } else {
+            closeTools()
+        }
+    }
+
     const ToolButton = ({ tool }) => {
         if (!tool) return
         return (
             <button
                 onClick={() => ToolSwitch(tool.id)}
-                className={`tool-nav w-full text-left p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors tool-${tool.id}`}
+                className={`tool-nav w-full text-left p-1 sm:p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-blend-900 transition-colors tool-${tool.id} hover:border-x-2 border-blue-400 dark:border-secondary-100 trasition-transform transition-all duration-500`}
             >
                 <div className="flex items-center justify-between">
                     <span className="font-medium text-gray-700 dark:text-gray-300"
                     >{toTitleCase(tool.name)}</span
                     >
-                    <ChevronRight className="w-5 h-5 fill-gray-400" />
+                    <ChevronRight className="hidden sm:block w-5 h-5 fill-gray-400" />
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0 sm:mt-1">
                     {tool.description}
                 </p>
             </button>
@@ -67,17 +85,17 @@ export const Converter = ({ category = 'documents' }) => {
             </div>
 
             {/* Tools Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 h-full">
+            <div className="relative block sm:grid grid-cols-1 lg:grid-cols-3 gap-0 h-full">
                 {/* Tools Navigation */}
-                <div
-                    className="sticky top-0 left-0 z-[5] bg-white dark:bg-cyber-950 rounded-none shadow-md p-2 sm:p-6 mb-14 w-fit max-w-[30vw] h-[90%] overflow-auto scrollbar-custom"
+                <div ref={availableToolRef}
+                    className="block sm:sticky top-0 left-0 z-[5] bg-white dark:bg-cyber-950 rounded-none shadow-md p-2 sm:p-6 mb-0.5 sm:mb-14 w-fit max-w-full sm:max-w-[30vw] sm:h-[90%] overflow-auto scrollbar-custom"
                 >
                     <div className="sticky -top-6 left-0 z-[5] text-lg bg-inherit w-full">
                         <h3 className=" font-semibold mb-4 text-gray-900 dark:text-white">
                             Available Tools
                         </h3>
                     </div>
-                    <div className="space-y-2 mt-2">
+                    <div className="flex flex-wrap sm:block space-y-0 sm:space-y-2 mt-2">
                         {Tools &&
                             Object.keys(Tools).map((toolkey, key) => {
                                 // console.log(toolkey, AvailableTools[toolkey])
@@ -87,10 +105,10 @@ export const Converter = ({ category = 'documents' }) => {
                 </div>
 
                 {/* Tool Interface */}
-                <div className="lg:col-span-2" data-aos="fade-left">
+                <div className="w-full lg:col-span-2 mt-1 bg-orange-300" data-aos="fade-left">
                     <div
                         id="tool-interface"
-                        className="bg-white dark:bg-cyber-950 rrounded-none sm:rounded-xl shadow-md p-6"
+                        className="bg-white dark:bg-cyber-950 rounded-none sm:rounded-xl shadow-md p-2 sm:p-6"
                     >
                         {activeTool && activeTool.component ?
                             <activeTool.component />
