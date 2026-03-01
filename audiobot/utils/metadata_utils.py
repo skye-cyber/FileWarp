@@ -1,7 +1,7 @@
 import speech_recognition as sr
 import ffmpeg
 from .logging_utils import colored_logger
-from filemac.utils.colors import fg, rs
+from filewarp.utils.colors import fg, rs
 
 RESET = rs
 

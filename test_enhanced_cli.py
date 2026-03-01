@@ -3,7 +3,7 @@
 Test script for the enhanced FileMAC CLI
 """
 
-from filemac.cli.app import enhanced_argsdev, RichConsoleUtils, EnhancedHelpSystem, ClipboardManager
+from filewarp.cli.app import enhanced_argsdev, RichConsoleUtils, EnhancedHelpSystem, ClipboardManager
 import sys
 import os
 

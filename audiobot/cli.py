@@ -14,7 +14,7 @@ import os
 
 import magic
 from .utils.metadata_utils import transcribe_audio
-from filemac.utils.colors import fg, rs
+from filewarp.utils.colors import fg, rs
 from .core.processor import VideoProcessor, AudioProcessor
 from .utils.logging_utils import colored_logger
 from .config.core import Config
@@ -112,7 +112,7 @@ def cli(argsv=None):
     """
     parser = argparse.ArgumentParser(
         description="Audiobot: A tool for audio effects on audio and video files.",
-        usage="filemac --audio_effect [-h] [--file FILE] \n\
+        usage="filewarp --audio_effect [-h] [--file FILE] \n\
             [-e {robotic,deep,high,echo,reverb,whisper,demonic,chipmunk,hacker,lowpass,distortion}] \n\
             [-o OUTPUT] [-v] [-b] [--visualize] [--transcribe] \n\
             [--audio_effect]",

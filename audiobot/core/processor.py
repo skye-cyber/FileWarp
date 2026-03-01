@@ -6,7 +6,7 @@ from pydub import AudioSegment
 from ..utils.visualizer import audiowave_visualizer
 from ..utils.metadata_utils import get_audio_bitrate
 from .effects import VoiceEffectProcessor
-from filemac.utils.colors import fg, rs
+from filewarp.utils.colors import fg, rs
 import sys
 # import io
 

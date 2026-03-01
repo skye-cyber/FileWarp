@@ -27,12 +27,12 @@ This document outlines the comprehensive plan to enhance FileMAC's command-line 
 **Objective**: Establish core utilities and infrastructure
 
 **Tasks**:
-1. **Create Rich Console Wrapper** (`filemac/utils/rich_utils.py`)
+1. **Create Rich Console Wrapper** (`filewarp/utils/rich_utils.py`)
    - Custom theme matching existing color scheme
    - Standardized message formats (info, success, error, warning)
    - Console initialization and configuration
 
-2. **Implement Clipboard Utilities** (`filemac/utils/clipboard.py`)
+2. **Implement Clipboard Utilities** (`filewarp/utils/clipboard.py`)
    - `copy_to_clipboard()` function
    - `paste_from_clipboard()` function
    - Error handling for clipboard operations
@@ -47,17 +47,17 @@ This document outlines the comprehensive plan to enhance FileMAC's command-line 
 **Objective**: Enhance core CLI functionality with Rich features
 
 **Tasks**:
-1. **Enhanced Help System** (`filemac/cli/help.py`)
+1. **Enhanced Help System** (`filewarp/cli/help.py`)
    - Rich-formatted command tables
    - Categorized command display
    - Interactive help navigation
 
-2. **Progress Bars for All Operations** (`filemac/utils/progress.py`)
+2. **Progress Bars for All Operations** (`filewarp/utils/progress.py`)
    - Standardized progress bar creation
    - Consistent styling across modules
    - Time estimates and completion percentages
 
-3. **Enhanced Error Handling** (Enhance `filemac/core/exceptions.py`)
+3. **Enhanced Error Handling** (Enhance `filewarp/core/exceptions.py`)
    - Rich-formatted error panels
    - Contextual error information
    - Suggested solutions and troubleshooting
@@ -67,17 +67,17 @@ This document outlines the comprehensive plan to enhance FileMAC's command-line 
 **Objective**: Add interactive elements and workflow improvements
 
 **Tasks**:
-1. **Interactive File Selection** (`filemac/cli/interactive.py`)
+1. **Interactive File Selection** (`filewarp/cli/interactive.py`)
    - Visual file listing with tables
    - Multi-file selection interface
    - File preview capabilities
 
-2. **Clipboard Workflow Integration** (`filemac/cli/clipboard_workflows.py`)
+2. **Clipboard Workflow Integration** (`filewarp/cli/clipboard_workflows.py`)
    - Clipboard-based input workflows
    - Result copying to clipboard
    - Batch operation support
 
-3. **Operation Summary Display** (`filemac/cli/summary.py`)
+3. **Operation Summary Display** (`filewarp/cli/summary.py`)
    - Visual operation summaries
    - Success/error breakdowns
    - Clipboard copy options
@@ -87,7 +87,7 @@ This document outlines the comprehensive plan to enhance FileMAC's command-line 
 **Objective**: Full integration with existing CLI
 
 **Tasks**:
-1. **Enhanced CLI Entry Point** (Modify `filemac/cli/cli.py`)
+1. **Enhanced CLI Entry Point** (Modify `filewarp/cli/cli.py`)
    - Rich welcome message
    - Clipboard support flag
    - Enhanced argument parsing
@@ -102,7 +102,7 @@ This document outlines the comprehensive plan to enhance FileMAC's command-line 
 ### Rich Utilities Implementation
 
 ```python
-# filemac/utils/rich_utils.py
+# filewarp/utils/rich_utils.py
 from rich.console import Console
 from rich.theme import Theme
 
@@ -133,7 +133,7 @@ def print_warning(message):
 ### Clipboard Utilities Implementation
 
 ```python
-# filemac/utils/clipboard.py
+# filewarp/utils/clipboard.py
 import pyperclip
 from .rich_utils import console, print_success, print_error
 
@@ -160,7 +160,7 @@ def paste_from_clipboard():
 ### Enhanced Help System
 
 ```python
-# filemac/cli/help.py
+# filewarp/cli/help.py
 from rich.panel import Panel
 from rich.table import Table
 from rich.box import ROUNDED
@@ -181,8 +181,8 @@ def show_main_help():
     table.add_column("Example", style="green")
     
     commands = [
-        ("--convert_doc", "Convert documents between formats", "filemac --convert_doc file.docx -to pdf"),
-        ("--convert_audio", "Convert audio files", "filemac --convert_audio file.mp3 -to wav"),
+        ("--convert_doc", "Convert documents between formats", "filewarp --convert_doc file.docx -to pdf"),
+        ("--convert_audio", "Convert audio files", "filewarp --convert_audio file.mp3 -to wav"),
         # ... more commands
     ]
     
