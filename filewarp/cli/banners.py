@@ -2,8 +2,15 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.align import Align
 
+import importlib.metadata
+
+try:
+    __version__ = importlib.metadata.version("filewarp")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "unknown"
+
 # ASCII Art Banner
-BANNER_old = """
+BANNER_old = f"""
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
 ║    ███████╗██╗██╗     ███████╗███╗   ███╗ █████╗  ██████╗    ║
@@ -14,12 +21,12 @@ BANNER_old = """
 ║    ╚═╝     ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝    ║
 ║                                                              ║
 ║                 File Management & Conversion                 ║
-║                   Version 2.0.5 • 2026                       ║
+║                   Version {__version__} • 2026                       ║
 ╚══════════════════════════════════════════════════════════════╝
 """
 
 
-BANNER = """
+BANNER = f"""
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
 ║    ███████╗██╗██╗     ███████╗██╗    ██╗ █████╗ ██████╗ ██████╗              ║
@@ -31,7 +38,7 @@ BANNER = """
 ║                                                                              ║
 ║                                                                              ║
 ║                        File Warpping & Conversion Tool                       ║
-║                           Version 2.0.5 • 2026                               ║
+║                           Version {__version__} • 2026                               ║
 ║                                                                              ║
 ║          ╔══════════════════════════════════════════════════════╗            ║
 ║          ║  Warp • Convert • Compress • Encrypt • Transform     ║            ║
@@ -42,7 +49,7 @@ BANNER = """
 
 # Modern Minimalist Banner for FileWarp
 
-BANNER_v1 = """
+BANNER_v1 = f"""
 ╭──────────────────────────────────────────────────────────────────────────────╮
 │                                                                              │
 │    ┌─┐┬ ┬┌┐┌┬─┐┌┬┐┌─┐┬ ┬  ┬ ┬┌─┐┬ ┬┌─┐                                    │
@@ -50,7 +57,7 @@ BANNER_v1 = """
 │    └─┘└─┘┘└┘┴└──┴┘└─┘ ┴   └┴┘┴ ┴ ┴ └─┘                                    │
 │                                                                              │
 │    ╭──────────────────────────────────────────────────────────────────────╮ │
-│    │                       FILE WRAP v2.0.5                                │ │
+│    │                       FILE WRAP v{__version__}                                │ │
 │    │              The Ultimate File Warpping Solution                      │ │
 │    ╰──────────────────────────────────────────────────────────────────────╯ │
 │                                                                              │
@@ -91,7 +98,7 @@ BANNER_v2 = """
 """
 
 
-BANNER_v3 = """
+BANNER_v3 = f"""
 ╭──────────────────────────────────────────────────────────────────────────╮
 │                                                                          │
 │    ╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲          │
@@ -108,7 +115,7 @@ BANNER_v3 = """
 │    │  "Your files, perfectly warpped, every time."                  │    │
 │    ╰────────────────────────────────────────────────────────────────╯    │
 │                                                                          │
-│    Version 2.0.5  |  MIT License  |  github.com/skye-cyber/filewarp                 │
+│    Version {__version__}  |  MIT License  |  github.com/skye-cyber/filewarp                 │
 │                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────╯
 """
@@ -119,13 +126,13 @@ console = Console()
 def display_banner():
     """Display the FileWarp banner with Rich styling"""
     console.print(
-        Align.center(
+        Align.left(
             Panel(
-                BANNER_v2,
+                BANNER,
                 border_style="cyan",
                 padding=(1, 2),
                 title="[bold cyan]FileWarp[/]",
-                subtitle="[dim]v2.0.5[/]"
+                subtitle=f"[dim]v{__version__}[/]",
             )
         )
     )
@@ -136,4 +143,3 @@ def display_banner_simple():
     """Display the animated banner"""
     console.print(BANNER, style="bold cyan", justify="center")
     console.print("─" * console.width, style="dim")
-

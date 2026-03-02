@@ -2,19 +2,10 @@
 
 import os
 import re
-import sqlite3
 import subprocess
 import sys
-
-import pandas as pd
-import PyPDF2
 from docx import Document
-from openpyxl import load_workbook
-from pdf2docx import parse
 from pdf2image import convert_from_path
-from pptx import Presentation
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Paragraph, SimpleDocTemplate
 from rich.progress import Progress
 from tqdm import tqdm
 from ..utils.simple import logger
@@ -164,19 +155,17 @@ class DocConverter:
                     pdf_file,
                 ]
                 print(f"{fg.BYELLOW}Parse the pdf document..{RESET}")
+                from pdf2docx import parse
+
                 parse(pdf_file, word_file, start=0, end=None)
 
-                logger.info(
-                    f"{fg.MAGENTA}New file is {fg.CYAN}{word_file}{RESET}"
-                )
+                logger.info(f"{fg.MAGENTA}New file is {fg.CYAN}{word_file}{RESET}")
                 logger.info(f"{fg.BGREEN}Success👨‍💻✅{RESET}")
             except KeyboardInterrupt:
                 print("\nQuit❕")
                 sys.exit(1)
             except Exception as e:
-                logger.info(
-                    f"{bg.RED}All conversion attempts have failed: {e}{RESET}"
-                )
+                logger.info(f"{bg.RED}All conversion attempts have failed: {e}{RESET}")
 
     def txt_to_pdf(self):
         """Convert text file(s) to pdf document (docx)
@@ -186,6 +175,9 @@ class DocConverter:
         ->Iterate through each line in the input .txt file and add it to the PDF
         ->Build and write the PDF document"""
         txt_list = self.preprocess()
+        from reportlab.platypus import Paragraph, SimpleDocTemplate
+        from reportlab.lib.pagesizes import letter
+
         _list_ = [item for item in txt_list if item.lower().endswith("txt")]
         for _file_ in _list_:
             _pdf_ = _file_[:-3] + "pdf" if _file_.lower().endswith("txt") else None
@@ -236,6 +228,8 @@ class DocConverter:
         ->Create a new slide in the PowerPoint presentation
         ->Add the paragraph text to the slide
         """
+        from pptx import Presentation
+
         word_list = self.preprocess()
         word_list = [
             item for item in word_list if item.split(".")[-1].lower() in ("doc", "docx")
@@ -282,9 +276,7 @@ class DocConverter:
 
                 # Save the PowerPoint presentation
                 prs.save(pptx_file)
-                logger.info(
-                    f"{fg.MAGENTA}New file is {fg.CYAN}{pptx_file}{RESET}"
-                )
+                logger.info(f"{fg.MAGENTA}New file is {fg.CYAN}{pptx_file}{RESET}")
                 print(f"\n{fg.BGREEN}Success👨‍💻✅{RESET}")
             except KeyboardInterrupt:
                 print("\nQuit❕⌨️")
@@ -321,9 +313,7 @@ class DocConverter:
                             f"Par:{fg.BLUE}{Par}/{len(doc.paragraphs)}{RESET}",
                             end="\r",
                         )
-                    logger.info(
-                        f"{fg.MAGENTA}Conversion of file to txt success{RESET}"
-                    )
+                    logger.info(f"{fg.MAGENTA}Conversion of file to txt success{RESET}")
 
                 logger.info(f"File: {fg.GREEN}{txt_file}{RESET}")
                 return txt_file
@@ -339,6 +329,7 @@ class DocConverter:
 
     def pdf_to_txt(self):
         """Convert pdf file to text file"""
+        import PyPDF2
 
         pdf_list = self.preprocess()
         pdf_list = [item for item in pdf_list if item.lower().endswith("pdf")]
@@ -370,6 +361,8 @@ class DocConverter:
     def pptx_to_txt(self, dest=None):
         """Convert ppt file to tetx document"""
         ppt_list = self.preprocess()
+        from pptx import Presentation
+
         ppt_list = [
             item for item in ppt_list if item.split(".")[-1].lower() in ("ppt", "pptx")
         ]
@@ -434,6 +427,7 @@ class DocConverter:
     @staticmethod
     def convert_ppt_to_pptx(obj: os.PathLike):
         import platform
+        from pptx import Presentation
 
         try:
             if obj.endswith("ppt"):
@@ -466,6 +460,7 @@ class DocConverter:
         from docx.shared import Pt
         from docx.shared import RGBColor as docxRGBColor
         from pptx.dml.color import RGBColor as pptxRGBColor
+        from pptx import Presentation
 
         """Convert ppt file to word document\n
         ->Preserves bold formatting
@@ -566,9 +561,7 @@ class DocConverter:
 
                         progress.update(task, advance=1)
                 document.save(word_file)
-                logger.info(
-                    f"{fg.MAGENTA}New file is {fg.CYAN}{word_file}{RESET}"
-                )
+                logger.info(f"{fg.MAGENTA}New file is {fg.CYAN}{word_file}{RESET}")
                 logger.info(f"{fg.BGREEN}Success👨‍💻✅{RESET}")
                 return word_file
             except Exception as e:
@@ -607,18 +600,14 @@ class DocConverter:
 
                 # Save the document as a Word file
                 doc.save(word_file)
-                logger.info(
-                    f"{fg.MAGENTA}New file is {fg.BCYAN}{word_file}{RESET}"
-                )
+                logger.info(f"{fg.MAGENTA}New file is {fg.BCYAN}{word_file}{RESET}")
                 logger.info(f"{fg.BGREEN}Success👨‍💻✅{RESET}")
             except FileExistsError as e:
                 logger.error(f"{str(e)}📁")
             except Exception as e:
                 logger.error(f"\n❌Oops something went awry {fg.RED}{e}{RESET}")
                 with open("conversion.log", "a") as log_file:
-                    log_file.write(
-                        f"\n❌Oops something went astray{fg.RED}{e}{RESET}"
-                    )
+                    log_file.write(f"\n❌Oops something went astray{fg.RED}{e}{RESET}")
 
     def convert_xls_to_word(self):
         """Convert xlsx file(s) to word file(s)\n
@@ -626,6 +615,7 @@ class DocConverter:
         ->Create a new Word document\n
         ->Iterate over the rows of the dataframe and add them to the Word document"""
         xls_list = self.preprocess()
+        import pandas as pd
 
         xls_list = [
             item for item in xls_list if item.split(".")[-1].lower() in ("xls", "xlsx")
@@ -679,6 +669,7 @@ class DocConverter:
         ->Convert the dataframe to plain text
         ->Write the plain text to the output file"""
         xls_list = self.preprocess()
+        import pandas as pd
 
         xls_list = [
             item
@@ -724,6 +715,7 @@ class DocConverter:
         ->Load the Excel file
         ->Save the DataFrame to CSV"""
         xls_list = self.preprocess()
+        import pandas as pd
 
         xls_list = [
             item for item in xls_list if item.split(".")[-1].lower() in ("xls", "xlsx")
@@ -757,6 +749,8 @@ class DocConverter:
     def convert_csv_to_xlsx(self):
         csv_list = self.preprocess()
         csv_list = [item for item in csv_list if item.split(".")[-1].lower() in ("csv")]
+        import pandas as pd
+        from openpyxl import load_workbook
 
         with Progress() as progress:
             task = progress.add_task("[cyan]Coverting", total=len(csv_list))
@@ -799,6 +793,9 @@ class DocConverter:
         ->Insert the DataFrame into a new table in the database
         ->Close the database connection"""
         xlsx_list = self.preprocess()
+        import pandas as pd
+        import sqlite3
+
         xlsx_list = [
             item for item in xlsx_list if item.split(".")[-1].lower() in ("xls", "xlsx")
         ]
@@ -809,9 +806,7 @@ class DocConverter:
                 else None
             )
             try:
-                db_file = input(
-                    f"{fg.BBLUE}Please enter desired sql filename: {RESET}"
-                )
+                db_file = input(f"{fg.BBLUE}Please enter desired sql filename: {RESET}")
                 table_name = input("Please enter desired table name: ")
                 # res = ["db_file", "table_name"]
                 if any(db_file) == "":

@@ -6,37 +6,12 @@ import sys
 # from functools import lru_cache
 from pathlib import Path
 
-# from typing import Optional, List, Tuple
-
 # Rich imports for amazing UI
-from rich.table import Table
 from rich.panel import Panel
-from rich.progress import (
-    Progress,
-    # SpinnerColumn,
-    # TextColumn,
-    # BarColumn,
-    # TaskProgressColumn,
-)
-
-# from rich.syntax import Syntax
-# from rich.tree import Tree
-# from rich.layout import Layout
-# from rich.live import Live
-from rich.text import Text
-from rich import box
-# from rich.prompt import Prompt, Confirm
-
-# from rich.markdown import Markdown
-from rich.align import Align
-
-# from rich.columns import Columns
-# from rich.style import Style
+from rich.progress import Progress
 
 # Click for better CLI handling
 import click
-# from click.decorators import decorator
-# from click.core import Context, Option
 
 # Local imports
 from ..core.document import DocConverter
@@ -45,12 +20,14 @@ from ..core.exceptions import FileSystemError, FilemacError
 
 # from ..utils.colors import fg, bg, rs
 from ..utils.simple import logger
-from .banners import display_banner
 from ._entry_ import console
 from .utils import (
-    # create_progress_spinner,
     animate_processing,
-    # RichHelpFormatter,
+    show_quick_commands,
+    display_version,
+    show_supported_formats,
+    FileWrapGroup,
+    with_format_table,
 )
 
 try:
@@ -64,6 +41,7 @@ _entry_ = PageExtractor._entry_
 
 
 @click.group(
+    cls=FileWrapGroup,
     invoke_without_command=True,
     context_settings=dict(help_option_names=["-h", "--help"]),
 )
@@ -91,61 +69,15 @@ def cli(ctx, version, no_resume, threads):
     ctx.obj["threads"] = threads
 
     if ctx.invoked_subcommand is None:
-        display_banner()
         console.print(
             "\n[bold]Welcome to Filemac![/] Use [cyan]filewarp --help[/] for commands.\n"
         )
         show_quick_commands()
 
 
-def show_quick_commands():
-    """Show quick command reference"""
-    table = Table(title="Quick Commands", box=box.ROUNDED, border_style="blue")
-    table.add_column("Command", style="cyan", no_wrap=True)
-    table.add_column("Description", style="white")
-    table.add_column("Example", style="yellow")
-
-    commands = [
-        ("convert-doc", "Convert documents", "filewarp convert-doc file.docx --to pdf"),
-        (
-            "convert-audio",
-            "Convert audio files",
-            "filewarp convert-audio song.mp3 --to wav",
-        ),
-        (
-            "convert-video",
-            "Convert videos",
-            "filewarp convert-video video.mp4 --to mkv",
-        ),
-        (
-            "convert-image",
-            "Convert images",
-            "filewarp convert-image photo.jpg --to png",
-        ),
-        ("ocr", "Extract text from images", "filewarp ocr image.png"),
-        ("pdf-join", "Join PDF files", "filewarp pdf-join file1.pdf file2.pdf"),
-        ("scan", "Scan PDF for text", "filewarp scan document.pdf"),
-    ]
-
-    for cmd, desc, example in commands:
-        table.add_row(cmd, desc, example)
-
-    console.print(table)
-
-
-def display_version():
-    """Display version with style"""
-    version_text = Text()
-    version_text.append("Filemac ", style="bold cyan")
-    version_text.append("v2.0.1", style="bold green")
-    version_text.append(" • Advanced File Management", style="dim")
-
-    panel = Panel(Align.center(version_text), border_style="blue", padding=(1, 2))
-    console.print(panel)
-
-
 # Document Conversion Commands
 @cli.command(name="convert-doc")
+@with_format_table("document")
 @click.argument("files", nargs=-1, required=True)
 @click.option("--to", "-tf", required=True, help="Target format for conversion")
 @click.option("--isolate", "-iso", help="Isolate specific file types")
@@ -158,7 +90,10 @@ def convert_document(ctx, files, to, isolate, use_extras):
     """Convert documents between formats (PDF, DOCX, etc.)"""
 
     if files[0] == "help":
-        show_supported_formats("document")
+        from ..utils.formats import create_doc_formats_table
+
+        create_doc_formats_table()
+        # show_supported_formats("document")
         return
 
     console.print(
@@ -188,6 +123,7 @@ def convert_document(ctx, files, to, isolate, use_extras):
 
 # Audio Commands
 @cli.command(name="convert-audio")
+@with_format_table("audio")
 @click.argument("file", required=True)
 @click.option("--to", "-tf", required=True, help="Target format for conversion")
 @animate_processing("Audio conversion")
@@ -600,41 +536,6 @@ def voice_type():
         console.print("\n[bold yellow]Voice typing stopped[/]")
     except Exception as e:
         console.print(f"[bold red]Error:[/] {str(e)}")
-
-
-# Utility Functions
-def show_supported_formats(format_type: str):
-    """Show supported formats for a specific conversion type"""
-
-    if format_type == "document":
-        from ..utils.formats import SUPPORTED_DOC_FORMATS
-
-        table = Table(title="Supported Document Formats", box=box.ROUNDED)
-        table.add_column("Format", style="cyan")
-        for fmt in SUPPORTED_DOC_FORMATS:
-            table.add_row(fmt)
-        console.print(table)
-
-    elif format_type == "audio":
-        from ..utils.formats import SUPPORTED_AUDIO_FORMATS_SHOW
-
-        console.print(
-            Panel(SUPPORTED_AUDIO_FORMATS_SHOW, title="Supported Audio Formats")
-        )
-
-    elif format_type == "video":
-        from ..utils.formats import SUPPORTED_VIDEO_FORMATS_SHOW
-
-        console.print(
-            Panel(SUPPORTED_VIDEO_FORMATS_SHOW, title="Supported Video Formats")
-        )
-
-    elif format_type == "image":
-        from ..utils.formats import SUPPORTED_IMAGE_FORMATS_SHOW
-
-        console.print(
-            Panel(SUPPORTED_IMAGE_FORMATS_SHOW, title="Supported Image Formats")
-        )
 
 
 # Audio Effects (via audiobot)
