@@ -50,12 +50,14 @@ from .core.image.core import (
 from .core.pdf.core import PageExtractor, PDF2LongImageConverter, PDFCombine
 from .core.recorder import SoundRecorder
 from .core.video.core import VideoConverter
-from .cli.main import CliInit as main, OperationMapper
+
+# from .cli.main import CliInit as main, OperationMapper
+from .cli.cli import main
 from .cli.converter import DocConverter
 from voice.VoiceType import VoiceTypeEngine
 
 
-__version__ = "2.1.0"
+__version__ = "2.1.2"
 
 __all__ = [
     "audiobot",
@@ -70,7 +72,7 @@ __all__ = [
     "VideoConverter",
     "SoundRecorder",
     "DocConverter",
-    "OperationMapper",
+    # "OperationMapper",
     "VoiceTypeEngine",
     "main",
 ]

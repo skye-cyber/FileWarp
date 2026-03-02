@@ -112,8 +112,16 @@ def show_quick_commands():
             "Convert audio files",
             "filewarp convert-audio song.mp3 --to wav",
         ),
-        ("convert-video", "Convert videos", "filewarp convert-video video.mp4 --to mkv"),
-        ("convert-image", "Convert images", "filewarp convert-image photo.jpg --to png"),
+        (
+            "convert-video",
+            "Convert videos",
+            "filewarp convert-video video.mp4 --to mkv",
+        ),
+        (
+            "convert-image",
+            "Convert images",
+            "filewarp convert-image photo.jpg --to png",
+        ),
         ("ocr", "Extract text from images", "filewarp ocr image.png"),
         ("pdf-join", "Join PDF files", "filewarp pdf-join file1.pdf file2.pdf"),
         ("scan", "Scan PDF for text", "filewarp scan document.pdf"),

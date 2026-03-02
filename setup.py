@@ -55,7 +55,7 @@ setup(
         "python-pptx",
         "gTTS",
         "pypandoc",
-        "fitz",
+        # "fitz",
         "pydub",
         "Pillow",
         "pandas",
