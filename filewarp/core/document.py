@@ -22,7 +22,7 @@ _ext_xls = ["xls", "xlsx"]
 PYGAME_DETECT_AVX2 = 1
 
 
-class DocConverter:
+class DocumentConverter:
     """Implementats all document conversion methods"""
 
     def __init__(self, input_file):

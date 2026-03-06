@@ -7,7 +7,7 @@ from pdf2image import convert_from_path
 from PIL import Image  # ImageSequence
 from tqdm.auto import tqdm
 from ...utils.simple import logger
-from ..document import DocConverter
+from ..document import DocumentConverter
 from ..exceptions import FilemacError, FileSystemError
 from ...utils.colors import fg, bg, rs
 from ..ocr import ExtractText
@@ -27,7 +27,7 @@ class PDF2LongImageConverter:
             long_image = self.convert(self.doc)
             return long_image
         if ext == "doc" or ext == "docx":
-            conv = DocConverter(self.doc)
+            conv = DocumentConverter(self.doc)
 
             path = conv.word_to_pdf()
             long_image = self.convert(path)
@@ -356,7 +356,7 @@ class Scanner:
 
     def scanAsImgs(self):
         file = self.input_file
-        mc = DocConverter(file)
+        mc = DocumentConverter(file)
         img_objs = mc.doc2image()
 
         text = ""

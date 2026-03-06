@@ -55,7 +55,6 @@ setup(
         "python-pptx",
         "gTTS",
         "pypandoc",
-        # "fitz",
         "pydub",
         "Pillow",
         "pandas",
@@ -69,6 +68,7 @@ setup(
         "reportlab",
         "numpy",
         "pdf2image",
+        #"poppler",  # Required by pdf2image
         "openpyxl",
         "rich",
         "tqdm",

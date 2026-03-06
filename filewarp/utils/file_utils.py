@@ -39,7 +39,9 @@ def dirbuster(_dir_):
         return
 
 
-def generate_filename(ext, basedir=OUTPUT_DIR, postfix="filewarp") -> Path:
+def generate_filename(
+    ext: str, basedir: Path = OUTPUT_DIR, postfix: str = "filewarp"
+) -> Path:
     """
     Generate Filename given its extension
     Args:
@@ -50,8 +52,7 @@ def generate_filename(ext, basedir=OUTPUT_DIR, postfix="filewarp") -> Path:
         path
     """
 
-    filename = OUTPUT_DIR / f"{uuid.uuid4().hex}-{postfix}.{ext}"
-
+    filename = basedir / f"{uuid.uuid4().hex}-{postfix}.{ext}"
     return filename
 
 

@@ -14,7 +14,7 @@ from rich.progress import Progress
 import click
 
 # Local imports
-from ..core.document import DocConverter
+from ..core.document import DocumentConverter
 from ..core.pdf.core import PageExtractor
 from ..core.exceptions import FileSystemError, FilemacError
 
@@ -26,7 +26,7 @@ from .utils import (
     show_quick_commands,
     display_version,
     show_supported_formats,
-    FileWrapGroup,
+    FileWarpGroup,
     with_format_table,
 )
 
@@ -37,11 +37,10 @@ except ImportError:
 
 
 # RESET = rs
-_entry_ = PageExtractor._entry_
 
 
 @click.group(
-    cls=FileWrapGroup,
+    cls=FileWarpGroup,
     invoke_without_command=True,
     context_settings=dict(help_option_names=["-h", "--help"]),
 )
@@ -179,6 +178,7 @@ def extract_audio(video_file):
 
 # Video Commands
 @cli.command(name="convert-video")
+@with_format_table("video")
 @click.argument("file", required=True)
 @click.option("--to", "-tf", required=True, help="Target format for conversion")
 @animate_processing("Video conversion")
@@ -214,6 +214,7 @@ def analyze_video(video_file):
 
 # Image Commands
 @cli.command(name="convert-image")
+@with_format_table("image")
 @click.argument("file", required=True)
 @click.option("--to", "-tf", required=True, help="Target format for conversion")
 @animate_processing("Image conversion")
@@ -340,7 +341,7 @@ def extract_pages(pdf_file, pages):
     console.print(f"[bold]Extracting pages[/] {pages} from [cyan]{pdf_file}[/]")
 
     args = [pdf_file] + [str(p) for p in pages]
-    _entry_(args)
+    PageExtractor.run(args)
 
 
 @cli.command(name="extract-images")
@@ -387,7 +388,7 @@ def scan_long(pdf_file, separator):
     sc.scanAsLongImg()
 
 
-@cli.command(name="pdf-to-long-image")
+@cli.command(name="pdf2long-image")
 @click.argument("pdf_file", required=True)
 def pdf_to_long_image(pdf_file):
     """Convert PDF to long image"""
@@ -456,12 +457,12 @@ def perform_ocr(images, separator):
 def doc_to_image(document, to):
     """Convert documents to images"""
 
-    conv = DocConverter(document)
+    conv = DocumentConverter(document)
     conv.doc2image(to)
 
 
 # HTML to Word
-@cli.command(name="html-to-word")
+@cli.command(name="html2word")
 @click.argument("html_files", nargs=-1, required=True)
 @animate_processing("HTML to Word conversion")
 def html_to_word(html_files):
@@ -471,18 +472,23 @@ def html_to_word(html_files):
     from ..utils.file_utils import generate_filename
 
     converter = HTML2Word()
-
+    console.print(
+        Panel(
+            f"[bold]Converting[/] {len(html_files)} file(s) to [cyan]word[/]",
+            border_style="green",
+        )
+    )
     for html_file in html_files:
-        output = generate_filename(ext="docx", basedir=Path(html_file))
-
-        with console.status(f"[cyan]Converting {Path(html_file).name}..."):
-            converter.convert_file(html_file, output)
+        output = generate_filename(
+            ext="docx", basedir=Path(html_file).absolute().parent
+        )
+        converter.convert_file(html_file, output)
 
         console.print(f"[bold green]✓[/] Converted: [cyan]{output}[/]")
 
 
 # Markdown to Word
-@cli.command(name="markdown-to-word")
+@cli.command(name="markdown2word")
 @click.argument("markdown_file", required=True)
 @animate_processing("Markdown to Word conversion")
 def markdown_to_word(markdown_file):
@@ -492,7 +498,7 @@ def markdown_to_word(markdown_file):
 
 
 # Text to Word
-@cli.command(name="text-to-word")
+@cli.command(name="text2word")
 @click.argument("text_file", required=True)
 @click.option("--font-size", default=12, help="Font size")
 @click.option("--font-name", default="Times New Roman", help="Font name")
@@ -565,6 +571,7 @@ def main():
         console.print(f"[bold red]File System Error:[/] {str(e)}")
         sys.exit(1)
     except Exception as e:
+        raise
         console.print(f"[bold red]Unexpected Error:[/] {str(e)}")
         logger.critical(f"Critical failure: {e}")
         sys.exit(1)

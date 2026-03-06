@@ -53,7 +53,7 @@ from .core.video.core import VideoConverter
 
 # from .cli.main import CliInit as main, OperationMapper
 from .cli.cli import main
-from .cli.converter import DocConverter
+from .cli.converter import DocumentConverter
 from voice.VoiceType import VoiceTypeEngine
 
 
@@ -71,7 +71,7 @@ __all__ = [
     "PageExtractor",
     "VideoConverter",
     "SoundRecorder",
-    "DocConverter",
+    "DocumentConverter",
     # "OperationMapper",
     "VoiceTypeEngine",
     "main",

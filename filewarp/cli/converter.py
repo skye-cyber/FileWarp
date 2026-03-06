@@ -8,7 +8,7 @@ from ..core.tts.gtts import GoogleTTS
 from ..utils.formats import (
     SUPPORTED_AUDIO_FORMATS_DIRECT,
 )
-from ..core.document import DocConverter
+from ..core.document import DocumentConverter
 
 RESET = rs
 default_supressor()
@@ -136,7 +136,7 @@ class MethodMappingEngine:
             conv.ppt_to_word()
         elif self.outf.lower() in ("text", "txt"):
             word = conv.ppt_to_word()
-            conv = DocConverter(word)
+            conv = DocumentConverter(word)
             conv.word_to_txt()
         elif self.outf.lower() in ("pptx"):
             conv.convert_ppt_to_pptx(self.file)
@@ -161,7 +161,7 @@ class MethodMappingEngine:
         self.doc_ls = ["docx", "doc"]
         sheetls = ["xlsx", "xls"]
         try:
-            conv = DocConverter(self.file)
+            conv = DocumentConverter(self.file)
             if self.file.lower().endswith(tuple(sheetls)):
                 self.spreedsheet(conv=conv)
 

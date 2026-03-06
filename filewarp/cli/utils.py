@@ -157,7 +157,7 @@ def show_supported_formats(format_type: str):
         console.print(f"[yellow]Format tables not available: {e}[/]")
 
 
-class FileWrapGroup(click.Group):
+class FileWarpGroup(click.Group):
     """Custom Click Group that displays banner with help"""
 
     def __init__(self, *args, **kwargs):
@@ -205,6 +205,32 @@ class FileWrapGroup(click.Group):
             self.show_quick_commands()
 
     def main(self, *args, **kwargs):
+        """Override main to handle help display"""
+        try:
+            # Check if this is a help invocation before processing
+            if any(arg in sys.argv for arg in ["--help", "-h"]):
+                # Show banner immediately for help commands
+                # display_banner()
+
+                # Check if it's a subcommand help
+                if len(sys.argv) > 1 and sys.argv[1] not in ["--help", "-h"]:
+                    from click import Context
+
+                    cmd_name = sys.argv[1]
+                    cmd = self.get_command(Context(self), cmd_name)
+
+                    # Show format table if command has metadata
+                    if cmd and hasattr(cmd.callback, "_format_table_type"):
+                        format_type = cmd.callback._format_table_type
+                        show_supported_formats(format_type)
+
+            return super().main(*args, **kwargs)
+        except SystemExit as e:
+            if e.code == 0:  # Help exit
+                sys.exit(0)
+            raise
+
+    def main_old(self, *args, **kwargs):
         """Override main to handle help display"""
         try:
             return super().main(*args, **kwargs)

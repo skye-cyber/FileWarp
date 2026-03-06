@@ -11,7 +11,7 @@ import requests
 from gtts import gTTS
 from pydub import AudioSegment
 from rich.errors import MarkupError
-from ..document import DocConverter
+from ..document import DocumentConverter
 from ...utils.colors import fg, rs
 from ...utils.simple import logger
 
@@ -406,9 +406,9 @@ class GoogleTTS:
                 elif input_file.endswith(".txt"):
                     text = GoogleTTS.text_file(input_file)
                 elif input_file.split(".")[-1] in ("ppt", "pptx"):
-                    conv = DocConverter(input_file)
+                    conv = DocumentConverter(input_file)
                     word = conv.ppt_to_word()
-                    conv = DocConverter(word)
+                    conv = DocumentConverter(word)
                     text = GoogleTTS.text_file(conv.word_to_txt())
                 else:
                     raise ValueError(
