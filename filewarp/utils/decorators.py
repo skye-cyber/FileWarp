@@ -20,3 +20,6 @@ class Decorators:
             return wrapper
 
         return decorator
+
+
+for_loop = Decorators.for_loop_decorator

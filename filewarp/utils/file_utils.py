@@ -40,19 +40,21 @@ def dirbuster(_dir_):
 
 
 def generate_filename(
-    ext: str, basedir: Path = OUTPUT_DIR, postfix: str = "filewarp"
+    basedir: Path, suffix: str, postfix: Optional[str] = "filewarp"
 ) -> Path:
     """
     Generate Filename given its extension
     Args:
-        ext-> str
+        suffix-> str file extension
         basedir-> Path
-        postfix = str
+        postfix = str string preceding name
+        prefix - string before name
     Returns:
         path
     """
 
-    filename = basedir / f"{uuid.uuid4().hex}-{postfix}.{ext}"
+    filename = basedir / f"{uuid.uuid4().hex}-{postfix}.{suffix}"
+
     return filename
 
 

@@ -93,8 +93,8 @@ class PageExtractor:
     Extract pages specified by pange range from a pdf file and save them as a new file
     Args:
         Pdf -> pdf file to be operated on.
-        Llimit -> lower limit, the start page for extraction
-        Ulimit -> upper limit, the end of extraction. Only one page (Llimit) is extracted ifnoUlimit is specified
+        start -> Page in from which to start extraction (default 1)
+        stop -> Stop page for extraction default is last page (-1)
         Range of pages to be extracted is given by Llimit and Ulimit inclusive
     Returns:
         outf-> the output file contsining the extracted pages
@@ -103,13 +103,12 @@ class PageExtractor:
     def __init__(
         self,
         pdf,
-        Llimits: int,
-        Ulimit: int = None,
+        start: int = 1,
+        stop: int = -1,
     ):
-        limits = [Llimits, Ulimit]
         self.pdf = pdf
-        self.start = limits[0] - 1
-        self.stop = limits[-1]
+        self.start = max(start - 1, 1)
+        self.stop = stop
 
         self.outf = f"{pdf.split('.')[0]}_{self.start}_{self.stop}_extract.pdf"
 
@@ -132,9 +131,7 @@ class PageExtractor:
             pdf_writer = PyPDF2.PdfWriter()
             print(f"{fg.BBLUE}[🤖]{fg.BBLUE} Extracting:{RESET}")
             for page_num in range(self.start, self.stop):
-                print(
-                    f"{fg.BBLUE}[📄]{RESET}{fg.DCYAN}Page {page_num + 1}{RESET}"
-                )
+                print(f"{fg.BBLUE}[📄]{RESET}{fg.DCYAN}Page {page_num + 1}{RESET}")
                 page = reader.pages[page_num]
                 pdf_writer.add_page(page)
 
@@ -155,7 +152,7 @@ class PageExtractor:
             # raise
 
     @staticmethod
-    def _entry_(kwargs):
+    def run(kwargs):
         """
         Args:
         kwargs type: list - Contains Upper and lower limit (first and last page)

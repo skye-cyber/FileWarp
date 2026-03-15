@@ -424,7 +424,7 @@ def convert_svg(svg_file, to):
         console.print("Supported formats: [cyan]png[/], [cyan]pdf[/], [cyan]svg[/]")
         return
 
-    output = generate_filename(ext=to, basedir=Path(svg_file))
+    output = generate_filename(Path(svg_file), to)
 
     convert_func(input_svg=svg_file, output_path=output.as_posix(), is_string=False)
 
@@ -479,9 +479,7 @@ def html_to_word(html_files):
         )
     )
     for html_file in html_files:
-        output = generate_filename(
-            ext="docx", basedir=Path(html_file).absolute().parent
-        )
+        output = generate_filename(Path(html_file).absolute().parent, "docx")
         converter.convert_file(html_file, output)
 
         console.print(f"[bold green]✓[/] Converted: [cyan]{output}[/]")
@@ -510,6 +508,93 @@ def text_to_word(text_file, font_size, font_name):
 
     init = StyledText(text_file, None, font_size, font_name)
     init.text_to_word()
+
+
+# Document Conversion Commands
+@cli.command(name="edit-video")
+@with_format_table("video")
+@click.argument("files", nargs=-1, required=True)
+@click.option("--range", "-r", type=str, help="Comma seperated ranges eg 0,30")
+@click.option("--trim_start", type=int, help="Trim the first n seconds")
+@click.option("--trim_end", type=int, help="Trim the last n seconds")
+@click.option(
+    "--quality",
+    type=str,
+    default="medium",
+    help="Output video quality: ultrafast,fast,medium,slow,veryslow\n \
+        Fast imply fast encoding hence large size",
+)
+@click.pass_context
+def edit_video(ctx, files, range, trim_start, trim_end, quality):
+    """Convert documents between formats (PDF, DOCX, etc.)"""
+
+    if files[0] == "help":
+        from ..utils.formats import create_video_formats_table
+
+        return create_video_formats_table()
+
+    console.print(
+        Panel(
+            f"[bold]Editing[/] {len(files)} file(s) by [cyan]triming[/]",
+            border_style="green",
+        )
+    )
+
+    from ..core.video.Editor import VideoEditor
+    from ..utils.file_utils import generate_filename
+    from ..utils.decorators import for_loop
+    from ..core.video.models import VideoQuality
+
+    editor = VideoEditor()
+
+    with Progress(console=console) as progress:
+        task = progress.add_task("[cyan]Editing...", total=len(files))
+
+        # if len(files) == 1 and not Path(files[0]).is_dir():
+        #     output_file = generate_filename(
+        #         Path(files[0]).parent, Path(files[0]).suffix, ""
+        #     )
+        #     if trim_start:
+        #         editor.trim_start(files[0], output_file, quality=quality)
+        #     elif trim_end:
+        #         editor.trim_end(files[0], output_file, quality=quality)
+        #     elif range:
+        #         trange = range.split(",")
+        #         if len(tuple(trange)) > 1:
+        #             editor.trim_video(
+        #                 files[0], output_file, tuple(trange), quality=quality
+        #             )
+        #     console.print(f"File: {output_file}")
+        # else:
+        @for_loop(files)
+        def process(self, file):
+            try:
+                file = Path(file)
+                if file.exists():
+                    output_file = generate_filename(
+                        file.parent, file.suffix.strip("."), ""
+                    )
+                    if trim_start:
+                        editor.trim_start(
+                            file, output_file, trim_start, quality=quality
+                        )
+                    elif trim_end:
+                        editor.trim_end(file, output_file, trim_end, quality=quality)
+                    elif range:
+                        trange = [int(r) for r in range.split(",")]
+                        if len(tuple(trange)) == 1:
+                            trange = [0, trange[0]]
+
+                        editor.trim_video(
+                            file, output_file, tuple(trange), quality=quality
+                        )
+            except Exception as e:
+                raise
+                print(e)
+            finally:
+                progress.update(task, advance=1)
+
+        process(None)
 
 
 # Recording and Voice Commands

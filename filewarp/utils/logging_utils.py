@@ -71,3 +71,6 @@ class LoggingContext:
         setup_logging(level=self.original_level)
         if self.file_handler:
             logging.getLogger("filewarp").removeHandler(self.file_handler)
+
+
+logger = setup_logging()

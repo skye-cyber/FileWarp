@@ -1,17 +1,12 @@
 import subprocess
-import os
 import tempfile
 import json
 from pathlib import Path
 from typing import Union, List, Tuple, Optional, Dict
-import logging
 from concurrent.futures import ThreadPoolExecutor
 import shutil
-from models import VideoCodec, AudioCodec, VideoQuality, VideoInfo, TrimRange
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from .models import VideoCodec, AudioCodec, VideoQuality, VideoInfo, TrimRange
+from ...utils.logging_utils import logger
 
 
 class VideoEditor:
@@ -277,7 +272,7 @@ class VideoEditor:
                 )
             if trim_range.end > video_info.duration:
                 logger.warning(
-                    f"Trim range {i}: end time {trim_range.end}s "
+                    f"\nTrim range {i}: end time {trim_range.end}s "
                     f"exceeds video duration {video_info.duration}s. "
                     f"Truncating to video end."
                 )
@@ -324,7 +319,8 @@ class VideoEditor:
         if copy_streams:
             cmd.extend(["-c:v", "copy"])
         else:
-            cmd.extend(["-c:v", video_codec.value, "-preset", quality.value])
+            quality_value = quality if isinstance(quality, str) else quality.value
+            cmd.extend(["-c:v", video_codec.value, "-preset", quality_value])
 
             # Set CRF if provided
             if crf:
@@ -379,8 +375,8 @@ class VideoEditor:
             copy_streams,
         )
 
-        logger.info(f"Trimming video: {input_path.name} -> {output_path.name}")
-        logger.debug(f"FFmpeg command: {' '.join(cmd)}")
+        # logger.info(f"Trimming video: {input_path.name} -> {output_path.name}")
+        # logger.debug(f"FFmpeg command: {' '.join(cmd)}")
 
         try:
             # Run FFmpeg with real-time output for progress monitoring
@@ -474,7 +470,7 @@ class VideoEditor:
                 str(output_path),
             ]
 
-            logger.info(f"Concatenating {len(temp_files)} segments...")
+            # logger.info(f"Concatenating {len(temp_files)} segments...")
 
             result = subprocess.run(concat_cmd, capture_output=True, text=True)
             if result.returncode != 0:
@@ -537,35 +533,41 @@ class VideoEditor:
             result = self.trim_video(video_path, output_path, trim_spec, **kwargs)
             output_paths.append(result)
 
-            logger.info(f"Processed: {video_path.name} -> {result.name}")
+            # logger.info(f"Processed: {video_path.name} -> {result.name}")
 
         return output_paths
 
     def __del__(self):
         """Cleanup temporary directory on object destruction"""
-        if hasattr(self, "_temp_dir") and os.path.exists(self._temp_dir):
-            try:
+        return
+        try:
+            if (
+                hasattr(self, "_temp_dir") and self._temp_dir
+                # and Path(self._temp_dir).absolute().exists()
+            ):
                 shutil.rmtree(self._temp_dir)
-            except Exception as e:
-                logger.warning(f"Failed to clean up temp directory: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to clean up temp directory: {e}")
 
 
 # Example usage and demonstration
 if __name__ == "__main__":
     # Initialize the editor
     editor = VideoEditor()
-
+    input_video = Path(
+        "/home/skye/Documents/playground/46cd11bdd8698d424fa8b7958923028a_1768945183335.mp4"
+    )
     # Example 1: Basic trimming
     print("=== Basic Trimming Examples ===")
 
     # Trim from start (remove first 10 seconds)
-    # editor.trim_start("input.mp4", "output_start.mp4", 10)
+    # editor.trim_start(input_video, input_video.parent / "output_start.mp4", 10)
 
     # Trim from end (keep only first 30 seconds)
-    # editor.trim_end("input.mp4", "output_end.mp4", 30)
+    # editor.trim_end(input_video, input_video.parent / "output_end.mp4", 30)
 
     # Trim both start and end (extract segment from 10s to 30s)
-    # editor.trim_start_end("input.mp4", "output_segment.mp4", 10, 30)
+    # editor.trim_start_end(input_video, input_video.parent / "output_segment.mp4", 10, 30)
 
     # Example 2: Multiple trim ranges
     print("\n=== Multiple Trim Ranges ===")
@@ -576,7 +578,7 @@ if __name__ == "__main__":
     ]
 
     # This will extract these three segments and concatenate them
-    # editor.trim_video("input.mp4", "output_compilation.mp4", ranges)
+    # editor.trim_video(input_video, input_video.parent / "output_compilation.mp4", ranges)
 
     # Example 3: Batch processing
     print("\n=== Batch Processing ===")
@@ -595,12 +597,12 @@ if __name__ == "__main__":
 
     # Example 4: Get video information
     print("\n=== Video Information ===")
-    # info = editor.get_video_info("input.mp4")
-    # print(f"Duration: {info.duration}s")
-    # print(f"Resolution: {info.width}x{info.height}")
-    # print(f"FPS: {info.fps}")
-    # print(f"Codec: {info.codec}")
-    # print(f"Has Audio: {info.has_audio}")
+    info = editor.get_video_info(input_video)
+    print(f"Duration: {info.duration}s")
+    print(f"Resolution: {info.width}x{info.height}")
+    print(f"FPS: {info.fps}")
+    print(f"Codec: {info.codec}")
+    print(f"Has Audio: {info.has_audio}")
 
     print("\nVideoEditor class loaded successfully!")
     print(
