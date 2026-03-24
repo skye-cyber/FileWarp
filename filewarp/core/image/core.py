@@ -133,7 +133,8 @@ class ImageConverter:
                     for ext in SUPPORTED_IMAGE_FORMATS.values()
                 )
             ]
-            for file in tqdm(input_list):
+
+            for file in tqdm(input_list, unit="files"):
                 if out_f.upper() in SUPPORTED_IMAGE_FORMATS:
                     _ = os.path.splitext(file)[0]
                     output_filename = _ + SUPPORTED_IMAGE_FORMATS[out_f].lower()

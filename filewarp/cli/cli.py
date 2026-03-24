@@ -217,7 +217,7 @@ def analyze_video(video_file):
 @with_format_table("image")
 @click.argument("file", required=True)
 @click.option("--to", "-tf", required=True, help="Target format for conversion")
-@animate_processing("Image conversion")
+# @animate_processing("Image conversion")
 def convert_image(file, to):
     """Convert image files between formats (PNG, JPG, etc.)"""
 
@@ -333,7 +333,7 @@ def pdf_join(pdfs, order):
 
 @cli.command(name="extract-pages")
 @click.argument("pdf_file", required=True)
-@click.argument("pages", nargs=-1, type=int, required=True)
+@click.argument("pages", nargs=-1, type=str, required=True)
 @animate_processing("Page extraction")
 def extract_pages(pdf_file, pages):
     """Extract specific pages from PDF"""

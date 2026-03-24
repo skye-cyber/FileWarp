@@ -107,15 +107,22 @@ class PageExtractor:
         stop: int = -1,
     ):
         self.pdf = pdf
-        self.start = max(start - 1, 1)
+        self.start = start  # max(start - 1, 1)
         self.stop = stop
 
-        self.outf = f"{pdf.split('.')[0]}_{self.start}_{self.stop}_extract.pdf"
+        # Normalize indexing
+        if self.start != 0:
+            self.start = self.start - 1
+
+            # Due to 0 indexing we wont subtract
+            # if self.stop:
+            #     self.stop = self.stop - 1
 
         if self.stop is None:
-            self.start = self.start
+            # Do not add due to 0 indexing
             self.stop = self.start + 1
-            self.outf = f"{pdf.split('.')[0]}_{self.start + 1}_extract.pdf"
+
+        self.outf = f"{pdf.split('.')[0]}_{start}_{self.stop}_extract.pdf"
 
     def getPages(self):
         """
@@ -168,7 +175,9 @@ class PageExtractor:
                 arg1,
                 arg2,
             ) = kwargs
-            init = PageExtractor(arg1, int(arg2))
+            arg2 = int(arg2)
+            # arg3 = arg2
+            init = PageExtractor(arg1, arg2)
             init.getPages()
         else:
             pass
