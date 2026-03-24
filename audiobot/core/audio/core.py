@@ -4,7 +4,7 @@ import librosa
 from pydub import AudioSegment, effects
 from scipy.signal import butter, lfilter, sosfilt
 from ...config.core import Config
-from filemac.utils.colors import fg, rs
+from filewarp.utils.colors import fg, rs
 
 RESET = rs
 

@@ -1,5 +1,5 @@
 #############################
-# MANIFEST.in for “filemac” #
+# MANIFEST.in for “filewarp” #
 #############################
 
 # ---------- Top‑level metadata ----------
@@ -9,9 +9,6 @@ include version.txt
 
 # ---------- Package‑wide data ----------
 # (Any files your code loads at runtime – templates, models, config files…)
-# recursive-include filemac/data *
-# recursive-include filemac/templates *
-# recursive-include filemac/static *
 
 # ---------- Documentation (optional) ----------
 # Comment out if you don’t publish docs with the package

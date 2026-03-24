@@ -1,5 +1,5 @@
 import logging
-from filemac.utils.colors import fg, rs
+from filewarp.utils.colors import fg, rs
 
 RESET = rs
 
