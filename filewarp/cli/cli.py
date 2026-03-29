@@ -84,7 +84,7 @@ def cli(ctx, version, no_resume, threads):
     "--use-extras", "-X", is_flag=True, help="Use alternative conversion method"
 )
 @click.pass_context
-@animate_processing("Document conversion")
+# @animate_processing("Document conversion")
 def convert_document(ctx, files, to, isolate, use_extras):
     """Convert documents between formats (PDF, DOCX, etc.)"""
 
@@ -537,64 +537,56 @@ def edit_video(ctx, files, range, trim_start, trim_end, quality):
         Panel(
             f"[bold]Editing[/] {len(files)} file(s) by [cyan]triming[/]",
             border_style="green",
+            expand=False,
         )
     )
 
     from ..core.video.Editor import VideoEditor
     from ..utils.file_utils import generate_filename
     from ..utils.decorators import for_loop
-    from ..core.video.models import VideoQuality
+    # from ..core.video.models import VideoQuality
 
     editor = VideoEditor()
 
-    with Progress(console=console) as progress:
-        task = progress.add_task("[cyan]Editing...", total=len(files))
+    # with Progress(console=console) as progress:
+    # task = progress.add_task("[cyan]Editing...", total=len(files))
 
-        # if len(files) == 1 and not Path(files[0]).is_dir():
-        #     output_file = generate_filename(
-        #         Path(files[0]).parent, Path(files[0]).suffix, ""
-        #     )
-        #     if trim_start:
-        #         editor.trim_start(files[0], output_file, quality=quality)
-        #     elif trim_end:
-        #         editor.trim_end(files[0], output_file, quality=quality)
-        #     elif range:
-        #         trange = range.split(",")
-        #         if len(tuple(trange)) > 1:
-        #             editor.trim_video(
-        #                 files[0], output_file, tuple(trange), quality=quality
-        #             )
-        #     console.print(f"File: {output_file}")
-        # else:
-        @for_loop(files)
-        def process(self, file):
-            try:
-                file = Path(file)
-                if file.exists():
-                    output_file = generate_filename(
-                        file.parent, file.suffix.strip("."), ""
-                    )
-                    if trim_start:
-                        editor.trim_start(
-                            file, output_file, trim_start, quality=quality
-                        )
-                    elif trim_end:
-                        editor.trim_end(file, output_file, trim_end, quality=quality)
-                    elif range:
-                        trange = [int(r) for r in range.split(",")]
-                        if len(tuple(trange)) == 1:
-                            trange = [0, trange[0]]
+    # if len(files) == 1 and not Path(files[0]).is_dir():
+    #     output_file = generate_filename(
+    #         Path(files[0]).parent, Path(files[0]).suffix, ""
+    #     )
+    #     if trim_start:
+    #         editor.trim_start(files[0], output_file, quality=quality)
+    #     elif trim_end:
+    #         editor.trim_end(files[0], output_file, quality=quality)
+    #     elif range:
+    #         trange = range.split(",")
+    #         if len(tuple(trange)) > 1:
+    #             editor.trim_video(
+    #                 files[0], output_file, tuple(trange), quality=quality
+    #             )
+    #     console.print(f"File: {output_file}")
+    # else:
+    @for_loop(files)
+    def process(self, file):
+        try:
+            file = Path(file)
+            if file.exists():
+                output_file = generate_filename(file.parent, file.suffix.strip("."), "")
+                if trim_start:
+                    editor.trim_start(file, output_file, trim_start, quality=quality)
+                elif trim_end:
+                    editor.trim_end(file, output_file, trim_end, quality=quality)
+                elif range:
+                    trange = [int(r) for r in range.split(",")]
+                    if len(tuple(trange)) == 1:
+                        trange = [0, trange[0]]
 
-                        editor.trim_video(
-                            file, output_file, tuple(trange), quality=quality
-                        )
-            except Exception as e:
-                raise
-                print(e)
-            finally:
-                progress.update(task, advance=1)
+                    editor.trim_video(file, output_file, tuple(trange), quality=quality)
+        except Exception as e:
+            print(e)
 
-        process(None)
+    process(None)
 
 
 # Recording and Voice Commands

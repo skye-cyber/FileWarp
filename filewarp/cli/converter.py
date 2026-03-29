@@ -182,7 +182,7 @@ class MethodMappingEngine:
                     conv.convert_csv_to_xlsx()
 
             else:
-                print(f"{fg.fg.BYELLOW}Unsupported Conversion type❌{RESET}")
+                print(f"{fg.BYELLOW}Unsupported Conversion type❌{RESET}")
                 pass
         except Exception as e:
             logger.error(e)

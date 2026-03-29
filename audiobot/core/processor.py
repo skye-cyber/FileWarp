@@ -92,8 +92,8 @@ class VideoProcessor:
             # Use the original bitrate or default to 5000k if unavailable
             if verbosity:
                 Clogger.info(
-                    f"Set:\n\tCodec = [{fg.fg.MAGENTA}libx264{fg.GREEN}\n"
-                    f"\tCodec type = [{fg.fg.MAGENTA}aac{fg.GREEN}\n"
+                    f"Set:\n\tCodec = [{fg.MAGENTA}libx264{fg.GREEN}\n"
+                    f"\tCodec type = [{fg.MAGENTA}aac{fg.GREEN}\n"
                     f"\tBitrate = [{fg.MAGENTA}{original_bitrate or '5000k'}{RESET}]"
                 )
 
