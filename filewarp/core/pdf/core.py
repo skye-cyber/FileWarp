@@ -18,16 +18,16 @@ DEFAULT_SEPARATOR = "\n"
 
 
 class PDF2LongImageConverter:
-    def __init__(self, doc):
-        self.document = doc
+    def __init__(self, pdf_file):
+        self.pdf_file = pdf_file
 
     def preprocess(self):
-        ext = self.doc.split(".")[-1].lower()
+        ext = self.pdf_file.split(".")[-1].lower()
         if ext == "pdf":
-            long_image = self.convert(self.doc)
+            long_image = self.convert(self.pdf_file)
             return long_image
         if ext == "doc" or ext == "docx":
-            conv = DocumentConverter(self.doc)
+            conv = DocumentConverter(self.pdf_file)
 
             path = conv.word_to_pdf()
             long_image = self.convert(path)
@@ -43,15 +43,15 @@ class PDF2LongImageConverter:
                 "soffice",
                 "--convert-to",
                 "pdf",
-                self.document,
+                self.pdf_file,
                 "--outdir",
-                os.path.dirname(self.document),
+                os.path.dirname(self.pdf_file),
             ]
         )
         pdf_file = os.path.abspath(
-            os.path.dirname(self.document)
+            os.path.dirname(self.pdf_file)
             + "/"
-            + (self.document.split("/")[-1].split(".")[0])
+            + (self.pdf_file.split("/")[-1].split(".")[0])
             + ".pdf"
         )
         long_image = self.convert(pdf_file)
@@ -72,7 +72,7 @@ class PDF2LongImageConverter:
 
             y_offset = 0
             for i, img in enumerate(images):
-                logger.info(f"{fg.BBLUE}{i}{RESET}", end="\r")
+                print(f"{fg.BBLUE}{i}{RESET}", end="\r")
                 new_im.paste(img, (0, y_offset))
                 y_offset += img.size[1]
             logger.info(f"{fg.BYELLOW}Save dest: {fg.BMAGENTA}{out_img}{RESET}")
@@ -120,7 +120,7 @@ class PageExtractor:
 
         if self.stop is None:
             # Do not add due to 0 indexing
-            self.stop = self.start + 1
+            self.stop = int(self.start) + 1
 
         self.outf = f"{pdf.split('.')[0]}_{start}_{self.stop}_extract.pdf"
 
@@ -303,7 +303,7 @@ class PDFCombine:
             print(f"{fg.RED}{e}{RESET}")
 
 
-class Scanner:
+class PDFScanner:
     """Implementation of scanning to extract data from pdf files and images
     input_file -> file to be scanned pdf,image
     Args:
@@ -369,30 +369,29 @@ class Scanner:
 
         for i in tqdm(img_objs, desc="Extracting", leave=False):
             extract = ExtractText(i, self.sep)
-            _text = extract.OCR()
-
+            _text = extract.run()
             if _text is not None:
-                text += _text
+                text += "".join(_text)
                 with open(f"{self.input_file[:-4]}_filewarp.txt", "a") as _writer:
                     _writer.write(text)
 
         def _cleaner_():
-            print(f"{fg.FMAGENTA}Clean")
+            # print(f"{fg.FMAGENTA}Clean")
             for obj in img_objs:
                 if os.path.exists(obj):
                     print(obj, end="\r")
                     os.remove(obj)
                 txt_file = f"{obj[:-4]}.txt"
                 if os.path.exists(txt_file):
-                    print(f"{bg.CYAN_BG}{txt_file}{RESET}", end="\r")
+                    print(f"{bg.CYAN}{txt_file}{RESET}", end="\r")
                     os.remove(txt_file)
 
         _cleaner_()
-        from ...utils.screen import clear_screen
+        # from ...utils.screen import clear_screen
 
-        clear_screen()
-        print(f"{bg.GREEN}Full Text{RESET}")
-        print(text)
+        # clear_screen()
+        # print(f"{bg.GREEN}Full Text{RESET}")
+        # print(text)
         print(
             f"{fg.BWHITE}Text File ={fg.IGREEN}{self.input_file[:-4]}_filewarp.txt{RESET}"
         )
@@ -412,7 +411,7 @@ class Scanner:
                 file = converter.preprocess()
 
                 tx = ExtractText(file, self.sep)
-                text = tx.OCR()
+                text = "".join(tx.run())
                 if text is not None:
                     # print(text)
                     print(f"{fg.GREEN}Ok{RESET}")

@@ -15,7 +15,7 @@ import click
 
 # Local imports
 from ..core.document import DocumentConverter
-from ..core.pdf.core import PageExtractor
+from ..core.pdf.core import PageExtractor, PDFScanner
 from ..core.exceptions import FileSystemError, FilemacError
 
 # from ..utils.colors import fg, bg, rs
@@ -364,18 +364,22 @@ def extract_images(pdf_file, size):
 @click.argument("pdf_file", required=True)
 def scan_pdf(pdf_file):
     """Scan PDF and extract text"""
-
-    sc = PageExtractor(pdf_file)
-    sc.scanPDF()
+    try:
+        sc = PDFScanner(pdf_file)
+        sc.scanPDF()
+    except Exception as e:
+        print(e)
 
 
 @cli.command(name="scan-as-image")
 @click.argument("pdf_file", required=True)
 def scan_as_image(pdf_file):
     """Scan PDF as images then extract text"""
-
-    sc = PageExtractor(pdf_file)
-    sc.scanAsImgs()
+    try:
+        sc = PDFScanner(pdf_file)
+        sc.scanAsImgs()
+    except Exception as e:
+        print(e)
 
 
 @cli.command(name="scan-long")
@@ -383,20 +387,24 @@ def scan_as_image(pdf_file):
 @click.option("--separator", "-sep", default="\n", help="Text separator")
 def scan_long(pdf_file, separator):
     """Scan document as long image (effective for complex layouts)"""
-
-    sc = PageExtractor(pdf_file, separator)
-    sc.scanAsLongImg()
+    try:
+        sc = PDFScanner(pdf_file, separator)
+        sc.scanAsLongImg()
+    except Exception as e:
+        print(e)
 
 
 @cli.command(name="pdf2long-image")
 @click.argument("pdf_file", required=True)
 def pdf_to_long_image(pdf_file):
     """Convert PDF to long image"""
+    try:
+        from ..core.pdf.core import PDF2LongImageConverter
 
-    from ..core.pdf.core import PDF2LongImageConverter
-
-    conv = PDF2LongImageConverter(pdf_file)
-    conv.preprocess()
+        conv = PDF2LongImageConverter(pdf_file)
+        conv.preprocess()
+    except Exception as e:
+        print(e)
 
 
 # SVG Commands

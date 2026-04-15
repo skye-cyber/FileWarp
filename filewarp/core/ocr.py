@@ -157,18 +157,18 @@ class ExtractText:
             if output_file:
                 # Process all images and concatenate text into one output file
                 all_text = ""
-                with Progress() as progress:
-                    task = progress.add_task(
-                        "[yellow]Extracting text...", total=num_images
-                    )
-                    for image_path in image_list:
-                        all_text += (
-                            self._process_image(
-                                image_path, os.path.splitext(output_file)[0] + ".txt"
-                            )
-                            + self.sep
+                # with Progress() as progress:
+                #     task = progress.add_task(
+                #         "[yellow]Extracting text...", total=num_images
+                #     )
+                for image_path in image_list:
+                    all_text += (
+                        self._process_image(
+                            image_path, os.path.splitext(output_file)[0] + ".txt"
                         )
-                        progress.update(task, advance=1)
+                        + self.sep
+                    )
+                # progress.update(task, advance=1)
                 with open(output_file, "w", encoding="utf-8") as f:
                     f.write(all_text)
                 return [all_text]  # Return a list containing the combined text
