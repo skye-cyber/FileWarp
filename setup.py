@@ -1,4 +1,7 @@
 """Build package."""
+# SYSTEM DEPS
+# sudo apt-get tesseract-ocr
+# sudo apt-get install poppler-utils
 
 import os
 import subprocess
