@@ -149,7 +149,6 @@ class VideoConverter:
                 for item in input_list
                 if any(item.upper().endswith(ext) for ext in SUPPORTED_VIDEO_FORMATS)
             ]
-            print(f"{fg.BYELLOW}Initializing conversion..{RESET}")
 
             for file in tqdm(input_list):
                 if out_f.upper() in Video_codecs.keys():
@@ -172,11 +171,9 @@ class VideoConverter:
                 video = VideoFileClip(file)
 
                 """Export the video to a different format"""
-                print(f"Converting file to: {fg.BMAGENTA}{output_filename}{RESET}")
                 video.write_videofile(output_filename, codec=Video_codecs[out_f])
 
                 """Close the video file"""
-                print(f"{fg.BGREEN}Done{RESET}")
                 video.close()
         except KeyboardInterrupt:
             print("\nQuit❕")

@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-from typing import List, Tuple, Union
+from typing import Union
 from moviepy import VideoFileClip
 from pydub import AudioSegment
 from tqdm.auto import tqdm
@@ -45,8 +45,6 @@ class AudioConverter:
                 for item in input_list
                 if any(item.lower().endswith(ext) for ext in SUPPORTED_AUDIO_FORMATS)
             ]
-            print(f"{fg.BYELLOW}Initializing conversion..{RESET}")
-
             def wav_redudancy():
                 # Load the mp3 file using Pydub
                 audio = AudioSegment.from_file(file, fmt)
@@ -60,10 +58,10 @@ class AudioConverter:
                     fmt = ext[1:]
                     # print(fmt, out_f)
                     audio = AudioSegment.from_file(file, fmt)
-                    print(f"{fg.BMAGENTA}Converting to {output_filename}{RESET}")
+                    # print(f"{fg.BMAGENTA}Converting to {output_filename}{RESET}")
                     audio.export(output_filename, format=out_f)
                     # new_audio = pydub.AudioSegment.from_file('output_audio.')
-                    print(f"{fg.BGREEN}Done{RESET}")
+                    # print(f"{fg.BGREEN}Done{RESET}")
 
                 elif file[-3:].lower() == "m4a" or out_f.lower() == "m4a":
                     m4a(file, out_f)
@@ -99,7 +97,6 @@ class AudioJoiner:
         elif os.path.isdir(self.obj):
             self.obj = self.obj
             self.isdir = True
-            print(f"Join {fg.BBLUE}{len(os.listdir(self.obj))}{RESET} files")
 
             for file in list(os.listdir(self.obj)):
                 path = os.path.join(self.obj, file)
@@ -133,13 +130,13 @@ class AudioJoiner:
                 print(os.path.splitext(self.files[0]))
             else:
                 masterfile = self.masterfile
-            print(f"{fg.YELLOW}Master file = {fg.BLUE}{masterfile}{RESET}")
+            # print(f"{fg.YELLOW}Master file = {fg.BLUE}{masterfile}{RESET}")
 
             self.ext = os.path.splitext(masterfile)[-1]
             _format = self.ext if self.ext in SUPPORTED_AUDIO_FORMATS_DIRECT else "ogg"
-            print(f"{fg.BYELLOW}Format = {fg.BBLUE}{_format}{RESET}")
+            # print(f"{fg.BYELLOW}Format = {fg.BBLUE}{_format}{RESET}")
 
-            print(f"{fg.BBLUE}Create a master file{RESET}")
+            # print(f"{fg.BBLUE}Create a master file{RESET}")
             # Create a list to store files
             ogg_files = []
 
@@ -225,7 +222,6 @@ class AudioExtracter:
         try:
             video_list = self.preprocess()
             for input_video in video_list:
-                print(f"{fg.BYELLOW}Extracting..{fg.DCYAN}")
                 video = VideoFileClip(input_video)
                 audio = video.audio
                 basename, _ = os.path.splitext(input_video)

@@ -21,7 +21,7 @@ class SimpleAnalyzer:
         """Fetch the original bitrate of the video file using ffmpeg."""
         try:
             probe = ffmpeg.probe(input_file)
-            print(probe.get("streams")[1])
+            # print(probe.get("streams")[1])
             bitrate = None
             # Iterate over the streams and find the video stream
             for stream in probe["streams"]:
@@ -57,7 +57,7 @@ class SimpleAnalyzer:
         try:
             # Read the video file
             cap = cv2.VideoCapture(self.video)
-            print(f"{fg.BYELLOW}Initializing..{RESET}")
+            # print(f"{fg.BYELLOW}Initializing..{RESET}")
             # Initialize variables
             # Frame rate (fps)
             bitrate, aspect_ratio, codec_name, channels, encoder = self.get_metadata(
@@ -67,7 +67,7 @@ class SimpleAnalyzer:
             total_area = 0
             duration = 0
 
-            print(f"{fg.DCYAN}Working on it{RESET}")
+            # print(f"{fg.DCYAN}Working on it{RESET}")
             while True:
                 ret, frame = cap.read()
 

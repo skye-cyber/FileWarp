@@ -56,14 +56,10 @@ class ImageCompressor:
             new_width, new_height = ImageCompressor.calculate_new_dimensions(
                 original_size, aspect_ratio, target_size_bytes
             )
-            print(f"{fg.BLUE}Processing ..{RESET}")
             resized_image = original_image.resize((new_width, new_height))
             resized_image.save(output_image_path, optimize=True, format="png")
             t_size = os.path.getsize(output_image_path) / 1000_000
-            print(f"{fg.BGREEN}Ok{RESET}")
-            print(
-                f"Image resized to {fg.BYELLOW}{t_size:.2f}{RESET} and saved to {fg.BYELLOW}{output_image_path}"
-            )
+
         except KeyboardInterrupt:
             print("\nQuit⏹️")
             sys.exit(1)
@@ -148,8 +144,6 @@ class ImageConverter:
 
                 pil_img.save(output_filename, out_f)
 
-                print(f"Saved image as: {fg.DCYAN}{output_filename}{RESET}")
-
             return output_filename
         except KeyboardInterrupt:
             print("\nQuit❕")
@@ -200,7 +194,6 @@ class GrayscaleConverter:
         Returns:
             The computed output file path.
         """
-        logger.info(f"{fg.BWHITE}Obtaining output file name{RESET}")
         if self.output_file and self.output_file.endswith(
             tuple(SUPPORTED_IMAGE_FORMATS.values())
         ):
@@ -225,7 +218,6 @@ class GrayscaleConverter:
         def process_image(self, image_path):
             """Processes a single image, converting it to grayscale and saving."""
             try:
-                logger.info(f"{fg.YELLOW}Processing {fg.CYAN}{image_path}{RESET}")
                 img = cv2.imread(image_path)
                 if img is None:
                     raise FileNotFoundError(f"Could not read image: {image_path}")
@@ -255,7 +247,6 @@ class GrayscaleConverter:
             filename = self.get_output_file(image_path)
             filename = modify_filename_if_exists(filename)
             img_pil.save(filename)
-            logger.info(f"{fg.GREEN}Image saved as {fg.BLUE}{filename}{RESET}")
         except Exception as e:
             raise
             logger.error(f"Unable to save the image: {fg.RED}{e}{RESET}")
@@ -428,9 +419,8 @@ class ImageDocxConverter:
                 )
 
         if docx_file_path:
-            print(
-                f"{fg.GREEN_RG}Successfully created DOCX: {fg.BLUE}{docx_file_path}{RESET}"
-            )
+            # print(f"{fg.GREEN_RG}Successfully created DOCX: {fg.BLUE}{docx_file_path}{RESET}")
+            pass
 
         return docx_file_path
 
@@ -545,11 +535,9 @@ class ImagePdfConverter:
         return file_path
 
     def _clean(self, dirs: list):
-        print(f"{fg.UWHITE}{fg.BWHITE}Clean Images Host dir{fg.RESET}")
         for d in dirs:
             abspath = os.path.abspath(d)
-            print(f"{fg.BWHITE}Nuke: {fg.BYELLOW}{abspath}{fg.RESET}")
-            # print(Path(d).is_relative_to(os.path.expanduser("~")))
+            # print(f"{fg.BWHITE}Nuke: {fg.BYELLOW}{abspath}{fg.RESET}")
             if (
                 os.path.exists(d) and os.path.isdir(d)
                 # and Path(d).is_relative_to(os.path.expanduser("~"))
@@ -756,8 +744,8 @@ class ImagePdfConverter:
                 output_pdf_path = self.create_pdf_from_images(
                     self.image_list, self.output_pdf_path
                 )
-                print(f"{fg.GREEN}PDF created successfully from directory!{RESET}")
-                print(f"{fg.GREEN}Output:{RESET} {fg.BLUE}{output_pdf_path}{RESET}")
+                # print(f"{fg.GREEN}PDF created successfully from directory!{RESET}")
+                # print(f"{fg.GREEN}Output:{RESET} {fg.BLUE}{output_pdf_path}{RESET}")
             else:
                 print(f"{fg.RED}One or more images in the list do not exist.{RESET}")
         elif self.input_dir and self.output_pdf_path:
@@ -770,10 +758,8 @@ class ImagePdfConverter:
                     output_pdf_path = self.convert_images_in_directory(
                         self.input_dir, self.output_pdf_path
                     )
-                    print(f"{fg.GREEN}PDF created successfully from directory!{RESET}")
-                    print(
-                        f"{fg.BWHITE}Output:{RESET} {fg.BLUE}{output_pdf_path}{RESET}"
-                    )
+                    # print(f"{fg.GREEN}PDF created successfully from directory!{RESET}")
+                    # print(f"{fg.BWHITE}Output:{RESET} {fg.BLUE}{output_pdf_path}{RESET}")
             else:
                 print(f"Directory {fg.YELLOW}{self.input_dir}{RESET} does not exist.")
         else:

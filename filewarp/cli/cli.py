@@ -135,11 +135,8 @@ def convert_audio(file, to):
 
     from ..core.audio.core import AudioConverter
 
-    with console.status(f"[bold cyan]Converting {file} to {to}..."):
-        ev = AudioConverter(file, to)
-        ev.pydub_conv()
-
-    console.print(f"[bold green]✓[/] Successfully converted to [cyan]{to}[/]")
+    ev = AudioConverter(file, to)
+    ev.pydub_conv()
 
 
 @cli.command(name="join-audio")
@@ -151,12 +148,8 @@ def join_audio(files, output):
 
     from ..core.audio.core import AudioJoiner
 
-    console.print(
-        Panel(f"[bold]Joining[/] {len(files)} audio files", border_style="blue")
-    )
-
     joiner = AudioJoiner(list(files))
-    result = joiner.worker()
+    joiner.worker()
 
     console.print(f"[bold green]✓[/] Joined {len(files)} files successfully")
 
@@ -169,11 +162,8 @@ def extract_audio(video_file):
 
     from ..core.audio.core import AudioExtracter
 
-    with console.status("[bold cyan]Extracting audio..."):
-        vi = AudioExtracter(video_file)
-        vi.moviepyextract()
-
-    console.print("[bold green]✓[/] Audio extracted successfully")
+    vi = AudioExtracter(video_file)
+    vi.moviepyextract()
 
 
 # Video Commands
@@ -191,25 +181,20 @@ def convert_video(file, to):
 
     from ..core.video.core import VideoConverter
 
-    with console.status(f"[bold cyan]Converting {file} to {to}..."):
-        ev = VideoConverter(file, to)
-        ev.CONVERT_VIDEO()
-
-    console.print(f"[bold green]✓[/] Successfully converted to [cyan]{to}[/]")
+    ev = VideoConverter(file, to)
+    ev.CONVERT_VIDEO()
 
 
 @cli.command(name="analyze-video")
 @click.argument("video_file", required=True)
+@animate_processing("Analysing Video")
 def analyze_video(video_file):
     """Analyze video file properties"""
 
     from ..miscellaneous.video_analyzer import SimpleAnalyzer
 
-    console.print(Panel(f"[bold]Analyzing[/] {video_file}", border_style="cyan"))
-
-    with console.status("[bold cyan]Processing video..."):
-        analyzer = SimpleAnalyzer(video_file)
-        analyzer.SimpleAnalyzer()
+    analyzer = SimpleAnalyzer(video_file)
+    analyzer.SimpleAnalyzer()
 
 
 # Image Commands
@@ -227,11 +212,8 @@ def convert_image(file, to):
 
     from ..core.image.core import ImageConverter
 
-    with console.status(f"[bold cyan]Converting {file} to {to}..."):
-        conv = ImageConverter(file, to)
-        conv.convert_image()
-
-    console.print(f"[bold green]✓[/] Successfully converted to [cyan]{to}[/]")
+    conv = ImageConverter(file, to)
+    conv.convert_image()
 
 
 @cli.command(name="resize-image")
@@ -338,8 +320,6 @@ def pdf_join(pdfs, order):
 def extract_pages(pdf_file, pages):
     """Extract specific pages from PDF"""
 
-    console.print(f"[bold]Extracting pages[/] {pages} from [cyan]{pdf_file}[/]")
-
     args = [pdf_file] + [str(p) for p in pages]
     PageExtractor.run(args)
 
@@ -411,7 +391,7 @@ def pdf_to_long_image(pdf_file):
 @cli.command(name="convert-svg")
 @click.argument("svg_file", required=True)
 @click.option("--to", "-tf", required=True, help="Target format (png, pdf, svg)")
-@animate_processing("SVG conversion")
+@animate_processing("Converting SVG")
 def convert_svg(svg_file, to):
     """Convert SVG files to other formats"""
 
@@ -436,8 +416,6 @@ def convert_svg(svg_file, to):
 
     convert_func(input_svg=svg_file, output_path=output.as_posix(), is_string=False)
 
-    console.print(f"[bold green]✓[/] Saved to: [cyan]{output}[/]")
-
 
 # OCR Commands
 @cli.command(name="ocr")
@@ -448,10 +426,6 @@ def perform_ocr(images, separator):
     """Extract text from images using OCR"""
 
     from ..core.ocr import ExtractText
-
-    console.print(
-        Panel(f"[bold]Processing[/] {len(images)} image(s)", border_style="cyan")
-    )
 
     ocr = ExtractText(list(images), separator)
     ocr.run()
@@ -480,17 +454,10 @@ def html_to_word(html_files):
     from ..utils.file_utils import generate_filename
 
     converter = HTML2Word()
-    console.print(
-        Panel(
-            f"[bold]Converting[/] {len(html_files)} file(s) to [cyan]word[/]",
-            border_style="green",
-        )
-    )
+
     for html_file in html_files:
         output = generate_filename(Path(html_file).absolute().parent, "docx")
         converter.convert_file(html_file, output)
-
-        console.print(f"[bold green]✓[/] Converted: [cyan]{output}[/]")
 
 
 # Markdown to Word
@@ -499,8 +466,7 @@ def html_to_word(html_files):
 @animate_processing("Markdown to Word conversion")
 def markdown_to_word(markdown_file):
     """Convert Markdown to Word with Mermaid rendering"""
-
-    console.print(f"[bold]Converting[/] [cyan]{markdown_file}[/] to Word")
+    pass
 
 
 # Text to Word
