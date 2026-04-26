@@ -28,16 +28,14 @@ def get_audio_bitrate(input_file, verbosity=False):
             f"Fetch the original bitrate of the video file using {fg.YELLOW}ffmpeg{RESET}."
         )
     try:
-        try:
-            metadata = ffmpeg.probe(input_file)
-        finally:
-            bitrate = None
-            # Iterate over the streams and find the video stream
-            for stream in metadata["streams"]:
-                if stream["codec_type"] == "video":
-                    bitrate = stream.get("bit_rate", None)
-                    break
-            return bitrate
+        metadata = ffmpeg.probe(input_file)
+        bitrate = None
+        # Iterate over the streams and find the video stream
+        for stream in metadata["streams"]:
+            if stream["codec_type"] == "video":
+                bitrate = stream.get("bit_rate", None)
+                break
+        return bitrate
     except ffmpeg.Error or Exception as e:
         Clogger.error(f"Error fetching bitrate for {input_file}: {e}")
         return None

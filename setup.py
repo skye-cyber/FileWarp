@@ -92,6 +92,8 @@ setup(
         "pynput",
         "pyaudio",
         "cairosvg",
+        "sounddevice",
+        "wavio"
     ],
     include_package_data=True,
     zip_safe=False,
