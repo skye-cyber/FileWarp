@@ -400,6 +400,12 @@ def convert_svg(svg_file, to):
 
     converter = SVGConverter()
 
+    svg_path = Path(svg_file)
+
+    if not svg_path.exists():
+        console.print(f"[bold red]Error:[/] SVG File not found {to}")
+        return
+
     converters = {
         "png": converter.to_png,
         "pdf": converter.to_pdf,
@@ -412,9 +418,10 @@ def convert_svg(svg_file, to):
         console.print("Supported formats: [cyan]png[/], [cyan]pdf[/], [cyan]svg[/]")
         return
 
-    output = generate_filename(Path(svg_file), to)
-
-    convert_func(input_svg=svg_file, output_path=output.as_posix(), is_string=False)
+    output = generate_filename(Path(svg_path.absolute().parent.as_posix()), to)
+    convert_func(
+        input_svg=svg_path.as_posix(), output_path=output.as_posix(), is_string=False
+    )
 
 
 # OCR Commands
